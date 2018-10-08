@@ -5,52 +5,62 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
-# Gradle automatically packages shared libraries with your APK.
+set(distribution_DIR ../../../../libs)
 
-
-
-add_library( # Sets the name of the library.
-             native-lib
-
-             # Sets the library as a shared library.
+add_library( native-lib
              SHARED
+             src/main/cpp/native-lib.cpp
 
-             # Provides a relative path to your source file(s).
-             src/main/cpp/native-lib.cpp )
-
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because CMake includes system libraries in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
-
-add_library( avutil-55
+              )
+add_library( avcodec-56
              SHARED
-             IMPORTED )
-set_target_properties( avutil-55
+             IMPORTED)
+set_target_properties( avcodec-56
                        PROPERTIES IMPORTED_LOCATION
-                       ../../../../libs/armeabi-v7a/libavutil-55.so )
+                       ${distribution_DIR}/armeabi-v7a/libavcodec.so)
+add_library( avfilter-5
+             SHARED
+             IMPORTED)
+set_target_properties( avfilter-5
+                       PROPERTIES IMPORTED_LOCATION
+                       ${distribution_DIR}/armeabi-v7a/libavfilter.so)
 
-find_library( # Sets the name of the path variable.
-              log-lib
+add_library( avformat-56
+             SHARED
+             IMPORTED)
+set_target_properties( avformat-56
+                       PROPERTIES IMPORTED_LOCATION
+                       ${distribution_DIR}/armeabi-v7a/libavformat.so)
 
-              # Specifies the name of the NDK library that
-              # you want CMake to locate.
-              log )
+add_library( avutil-54
+             SHARED
+             IMPORTED)
+set_target_properties( avutil-54
+                       PROPERTIES IMPORTED_LOCATION
+                       ${distribution_DIR}/armeabi-v7a/libavutil.so)
 
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in this
-# build script, prebuilt third-party libraries, or system libraries.
+add_library( swresample-1
+             SHARED
+             IMPORTED)
+set_target_properties( swresample-1
+                       PROPERTIES IMPORTED_LOCATION
+                       ${distribution_DIR}/armeabi-v7a/libswresample.so)
 
-
-
-
-target_link_libraries( # Specifies the target library.
-                        native-lib
-                        avutil-55
-                       # Links the target library to the log library
-                       # included in the NDK.
-                       ${log-lib} )
+add_library( swscale-3
+             SHARED
+             IMPORTED)
+set_target_properties( swscale-3
+                       PROPERTIES IMPORTED_LOCATION
+                       ${distribution_DIR}/armeabi-v7a/libswscale.so)
+include_directories(libs/include)
+target_link_libraries( native-lib
+                       avcodec-56
+                       avfilter-5
+                       avformat-56
+                       avutil-54
+                       swresample-1
+                       swscale-3
+                       log
+                       android
+                       OpenSLES
+                        )
