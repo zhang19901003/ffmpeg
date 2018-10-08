@@ -12,54 +12,54 @@ add_library( native-lib
              src/main/cpp/native-lib.cpp
 
               )
-add_library( avcodec-56
+add_library( avcodec
              SHARED
              IMPORTED)
-set_target_properties( avcodec-56
+set_target_properties( avcodec
                        PROPERTIES IMPORTED_LOCATION
                        ${distribution_DIR}/armeabi-v7a/libavcodec.so)
-add_library( avfilter-5
+add_library( avfilter
              SHARED
              IMPORTED)
-set_target_properties( avfilter-5
+set_target_properties( avfilter
                        PROPERTIES IMPORTED_LOCATION
                        ${distribution_DIR}/armeabi-v7a/libavfilter.so)
 
-add_library( avformat-56
+add_library( avformat
              SHARED
              IMPORTED)
-set_target_properties( avformat-56
+set_target_properties( avformat
                        PROPERTIES IMPORTED_LOCATION
                        ${distribution_DIR}/armeabi-v7a/libavformat.so)
 
-add_library( avutil-54
+add_library( avutil
              SHARED
              IMPORTED)
-set_target_properties( avutil-54
+set_target_properties( avutil
                        PROPERTIES IMPORTED_LOCATION
                        ${distribution_DIR}/armeabi-v7a/libavutil.so)
 
-add_library( swresample-1
+add_library( swresample
              SHARED
              IMPORTED)
-set_target_properties( swresample-1
+set_target_properties( swresample
                        PROPERTIES IMPORTED_LOCATION
                        ${distribution_DIR}/armeabi-v7a/libswresample.so)
 
-add_library( swscale-3
+add_library( swscale
              SHARED
              IMPORTED)
-set_target_properties( swscale-3
+set_target_properties( swscale
                        PROPERTIES IMPORTED_LOCATION
                        ${distribution_DIR}/armeabi-v7a/libswscale.so)
 include_directories(libs/include)
 target_link_libraries( native-lib
-                       avcodec-56
-                       avfilter-5
-                       avformat-56
-                       avutil-54
-                       swresample-1
-                       swscale-3
+                       avcodec
+                       avfilter
+                       avformat
+                       avutil
+                       swresample
+                       swscale
                        log
                        android
                        OpenSLES

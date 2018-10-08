@@ -44,6 +44,8 @@ Java_com_adasplus_update_c_MainActivity_stringFromJNI(JNIEnv *env, jobject  ) {
 
     for (int i = 0; i < ic->nb_streams; i++)
     {
+
+
         AVCodecContext *enc = ic->streams[i]->codec;
         if (enc->codec_type == AVMEDIA_TYPE_VIDEO)
         {
@@ -53,7 +55,7 @@ Java_com_adasplus_update_c_MainActivity_stringFromJNI(JNIEnv *env, jobject  ) {
             AVCodec *codec = avcodec_find_decoder(enc->codec_id);
             if (!codec)
             {
-                printf("video code not find!\n");
+
                 return env->NewStringUTF(info);
             }
             int err = avcodec_open2(enc, codec, NULL);
@@ -68,24 +70,25 @@ Java_com_adasplus_update_c_MainActivity_stringFromJNI(JNIEnv *env, jobject  ) {
     }
 
 
-
-
-
+    int i =0;
     AVPacket pkt;
     memset(&pkt, 0, sizeof(AVPacket));
     for (;;) {
-
+        i++;
         int err = av_read_frame(ic, &pkt);
         if (err != 0) {
             char buf[1024] = {0};
             av_strerror(err, buf, sizeof(buf));
+            LOGE("%d", err);
             break;
         }
         if (pkt.stream_index == videoStream) {
-            LOGE("%d", pkt.size);
+
         }
         av_packet_unref(&pkt);
+
     }
+    return env->NewStringUTF(info);
 }
 
 
