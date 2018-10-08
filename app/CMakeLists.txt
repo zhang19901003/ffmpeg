@@ -10,6 +10,8 @@ cmake_minimum_required(VERSION 3.4.1)
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
+
+
 add_library( # Sets the name of the library.
              native-lib
 
@@ -25,6 +27,13 @@ add_library( # Sets the name of the library.
 # you want to add. CMake verifies that the library exists before
 # completing its build.
 
+add_library( avutil-55
+             SHARED
+             IMPORTED )
+set_target_properties( avutil-55
+                       PROPERTIES IMPORTED_LOCATION
+                       ../../../../libs/armeabi-v7a/libavutil-55.so )
+
 find_library( # Sets the name of the path variable.
               log-lib
 
@@ -36,9 +45,12 @@ find_library( # Sets the name of the path variable.
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
-target_link_libraries( # Specifies the target library.
-                       native-lib
 
+
+
+target_link_libraries( # Specifies the target library.
+                        native-lib
+                        avutil-55
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib} )
