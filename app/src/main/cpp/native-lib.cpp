@@ -4,12 +4,13 @@
 #include <stdio.h>
 #include <iostream>
 #define LOG_TAG "native-dev"#define LOGI(...)
-#define TAG "Adas"
+#define TAG "ffmpeg"
 #define LOGD(...)__android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
 #define LOGI(...)__android_log_print(ANDROID_LOG_INFO,TAG,__VA_ARGS__)
 #define LOGW(...)__android_log_print(ANDROID_LOG_WARN,TAG,__VA_ARGS__)
 #define LOGE(...)__android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
 #define LOGF(...)__android_log_print(ANDROID_LOG_FATAL,TAG,__VA_ARGS__)
+#include <media/NdkMediaCodec.h>
 
 
 
@@ -22,6 +23,7 @@ extern "C" {
 #include <unistd.h>
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
+
 }
 
 using namespace std;
@@ -34,7 +36,8 @@ Java_com_adasplus_update_c_MainActivity_ffOpen(JNIEnv *env, jobject instance, js
     av_register_all();
     avformat_network_init();
     AVFormatContext *ic = NULL;
-    int videoStream = 0;
+    int videoStream = -1;
+    int audioStream = -1;
     int re = avformat_open_input(&ic, path, 0, 0);
     if (re != 0) {
         char errorbuf[1024] = {0};
@@ -43,12 +46,12 @@ Java_com_adasplus_update_c_MainActivity_ffOpen(JNIEnv *env, jobject instance, js
         return -1;
     }
 
+    env->ReleaseStringUTFChars(path_, path);
     for (int i = 0; i < ic->nb_streams; i++) {
         AVCodecContext *enc = ic->streams[i]->codec;
         if (enc->codec_type == AVMEDIA_TYPE_VIDEO) {
             videoStream = i;
-            LOGE("%d", videoStream);
-            LOGE("%d", ic->nb_streams);
+            LOGE("videoStream = %d", videoStream);
             AVCodec *codec = avcodec_find_decoder(enc->codec_id);
             if (!codec) {
                 return -2;
@@ -59,13 +62,21 @@ Java_com_adasplus_update_c_MainActivity_ffOpen(JNIEnv *env, jobject instance, js
                 av_strerror(err, buf, sizeof(buf));
                 return -3;
             }
+        } else if(enc->codec_type == AVMEDIA_TYPE_AUDIO){
+            audioStream = i;
+            LOGE("audioStraem = %d", audioStream);
+
         }
     }
 
+
     int i = 0;
     AVPacket pkt;
+    double_t a= cos(1);
+    LOGE("%x", a);
     memset(&pkt, 0, sizeof(AVPacket));
     for (;;) {
+
         i++;
         int err = av_read_frame(ic, &pkt);
         if (err != 0) {
@@ -75,7 +86,7 @@ Java_com_adasplus_update_c_MainActivity_ffOpen(JNIEnv *env, jobject instance, js
             LOGE("%s", err);
             break;
         }
-        
+
         if (pkt.stream_index == videoStream) {
 
         }
