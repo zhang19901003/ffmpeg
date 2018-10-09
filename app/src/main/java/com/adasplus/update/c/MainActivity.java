@@ -12,8 +12,8 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
     static {
-              System.loadLibrary("native-lib");
-           }
+        System.loadLibrary("native-lib");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,19 +21,12 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
+        tv.setText(String.valueOf(ffOpen("/sdcard/aa.mp4")));
+
 
 
     }
 
-    public native String stringFromJNI();
+    public native int ffOpen(String path);
 
-
-//    public void play(View view){
-//        musicPlay.play();
-//    }
-//
-//    public void stop(View view){
-//        musicPlay.stop();
-//    }
 }
