@@ -3,7 +3,7 @@
 #include <android/log.h>
 #include <stdio.h>
 #include <iostream>
-#define LOG_TAG "native-dev"#define LOGI(...)
+
 #define TAG "ffmpeg"
 #define LOGD(...)__android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
 #define LOGI(...)__android_log_print(ANDROID_LOG_INFO,TAG,__VA_ARGS__)
@@ -11,8 +11,6 @@
 #define LOGE(...)__android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
 #define LOGF(...)__android_log_print(ANDROID_LOG_FATAL,TAG,__VA_ARGS__)
 #include <media/NdkMediaCodec.h>
-
-
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -51,7 +49,7 @@ Java_com_adasplus_update_c_MainActivity_ffOpen(JNIEnv *env, jobject instance, js
         AVCodecContext *enc = ic->streams[i]->codec;
         if (enc->codec_type == AVMEDIA_TYPE_VIDEO) {
             videoStream = i;
-            LOGE("videoStream = %d", videoStream);
+            LOGE("videoStream = %d", videoStream);[-]
             AVCodec *codec = avcodec_find_decoder(enc->codec_id);
             if (!codec) {
                 return -2;
@@ -69,11 +67,8 @@ Java_com_adasplus_update_c_MainActivity_ffOpen(JNIEnv *env, jobject instance, js
         }
     }
 
-
     int i = 0;
     AVPacket pkt;
-    double_t a= cos(1);
-    LOGE("%x", a);
     memset(&pkt, 0, sizeof(AVPacket));
     for (;;) {
 
