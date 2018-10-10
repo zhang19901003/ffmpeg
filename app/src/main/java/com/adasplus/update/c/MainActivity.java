@@ -22,11 +22,9 @@ public class MainActivity extends Activity {
 
         TextView tv = (TextView) findViewById(R.id.sample_text);
         tv.setText(String.valueOf(ffOpen("/sdcard/aa.mp4")));
-
-
-
     }
 
     public native int ffOpen(String path);
+
 
 }
