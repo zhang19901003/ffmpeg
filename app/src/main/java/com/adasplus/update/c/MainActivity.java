@@ -21,12 +21,12 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         TextView tv = (TextView) findViewById(R.id.sample_text);
-       tv.setText(String.valueOf(ffOpen("/sdcard/test.mp4")));
-       // test();
+        tv.setText(String.valueOf(ffOpen("/sdcard/2018-10-11-18-09-43after.mp4")));
+        // test();
 
     }
 
     public native int ffOpen(String path);
 
-    public native void test();
+    // public native void test();
 }

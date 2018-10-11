@@ -197,10 +197,21 @@ Java_com_adasplus_update_c_MainActivity_ffOpen(JNIEnv *env, jobject instance, js
         int re = av_read_frame(ic, pkt);
         if (re != 0) {
 
+            char errorbuf[1024] = {0};
+            av_strerror(re, errorbuf, sizeof(errorbuf));
+            LOGE("%s", errorbuf);
+
             int pos = 20 * r2b(ic->streams[vS]->time_base);
             LOGW("video end %d,%d,%d", ic->streams[vS]->time_base.den,
                  ic->streams[vS]->time_base.num, pos);
-            av_seek_frame(ic, vS, pos, AVSEEK_FLAG_BACKWARD | AVSEEK_FLAG_FRAME);
+          re =  av_seek_frame(ic, vS, 1000000, AVSEEK_FLAG_BACKWARD | AVSEEK_FLAG_FRAME);
+
+            if (re < 0) {
+                char errorbuf[1024] = {0};
+                av_strerror(re, errorbuf, sizeof(errorbuf));
+                LOGE("%s", errorbuf);
+                break;
+            }
             continue;
         }
 
@@ -225,7 +236,7 @@ Java_com_adasplus_update_c_MainActivity_ffOpen(JNIEnv *env, jobject instance, js
                 //     LOGW("avcodec_receive_frame failure");
                 break;
             }
-            LOGW("avcodec_receive_frame success %f", frame->pts * r2b(ic->streams[vS]->time_base));
+            LOGW( "avcodec_receive_frame success %f", frame->pts * r2b(ic->streams[vS]->time_base));
             if (cc == vc) {
                 frameCount++;
             }
