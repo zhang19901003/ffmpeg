@@ -18,12 +18,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String cpuInfo = android.os.Build.CPU_ABI;
+        Log.e("Adas",cpuInfo);
         setContentView(R.layout.activity_main);
-
-
     }
-
-
-
     // public native void test();
 }
