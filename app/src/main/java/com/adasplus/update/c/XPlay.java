@@ -1,6 +1,7 @@
 package com.adasplus.update.c;
 
 import android.content.Context;
+import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -37,8 +38,7 @@ public class XPlay extends SurfaceView implements  Runnable,SurfaceHolder.Callba
 
     @Override
     public void run() {
-         Open("/sdcard/aa.mp4",getHolder().getSurface());
+         Open("/sdcard/asd.mp4",getHolder().getSurface());
     }
-
     public  native  int Open(String path,Object surface);
 }
