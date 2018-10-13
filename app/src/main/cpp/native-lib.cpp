@@ -47,23 +47,30 @@ long long GetNowMs() {
     return t;
 }
 
+
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring path_,
+Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url_,
                                       jobject surface) {
-    const char *url = env->GetStringUTFChars(path_, 0);
+    const char *url = env->GetStringUTFChars(url_, 0);
+    char info[10000] = {0};
+    sprintf(info, "%s\n", avcodec_configuration());
+    LOGE("%s", avcodec_configuration());
+
     av_register_all();
     avformat_network_init();
     //注册解码器
     avcodec_register_all();
+
     AVFormatContext *ic = NULL;
 
+    int videoStream = 0;
     int re = avformat_open_input(&ic, url, 0, 0);
     if (re != 0) {
         char errorbuf[1024] = {0};
         av_strerror(re, errorbuf, sizeof(errorbuf));
         LOGE("%s", "open failure");
-        return -1;
+        return 0;
     }
     //flv h264 格式获取不到时长 nb_stream（没有头部信息） 用这个方法去读取一段数据 做探测
     // 但是此方法不能保证所有格式都能获取时长，只能通过遍历帧数获取时长
@@ -83,7 +90,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
             LOGE("视频数据");
             vS = i;
             fps = r2b(as->avg_frame_rate);
-            // codec_id 28 h264   AV_PIX_FMT_YUVJ420P = codecpar->format = 12
+            // codec_id 28 h264   AV_PIX_FMT_YUVJ420P = codecpar->format = 8
             LOGW("帧率%d,w=%d,h=%d codeid =%d pixformat =%d", fps, as->codecpar->width,
                  as->codecpar->height,
                  as->codecpar->codec_id,
@@ -107,57 +114,27 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
     codec = avcodec_find_decoder_by_name("h264_mediacodec");
     if (!codec) {
         LOGW("avcodec_find_decoder null");
-        return -2;
+        return 0;
     }
     //解码器初始化
     AVCodecContext *vc = avcodec_alloc_context3(codec);
-    re = avcodec_parameters_to_context(vc, ic->streams[vS]->codecpar);
-    if (re != 0) {
-        LOGW("avcodec_parameters_to_context failed");
-        return -3;
-    }
+    avcodec_parameters_to_context(vc, ic->streams[vS]->codecpar);
     vc->thread_count = 8;
     //打开解码器
     re = avcodec_open2(vc, 0, 0);
     if (re != 0) {
         LOGW("视频解码器打开失败");
-        return -3;
+        return 0;
     }
-    AVCodecContext *ac = NULL;
-    char *pcm;
-    SwrContext *actx = NULL;
-    if (aS >= 0) {
-        //   //软解码器
-        AVCodec *acodec = avcodec_find_decoder(ic->streams[aS]->codecpar->codec_id);
-        ac = avcodec_alloc_context3(acodec);
-        avcodec_parameters_to_context(ac, ic->streams[aS]->codecpar);
-        ac->thread_count = 8;
-        //打开解码器
-        re = avcodec_open2(ac, 0, 0);
-        if (re != 0) {
-            LOGW("解码音频器打开失败");
-            return -5;
-        }
-        actx = swr_alloc();
-        if (actx == NULL) {
-            LOGW("swr_alloc failed");
-            return -6;
-        }
-
-        actx = swr_alloc_set_opts(actx, av_get_default_channel_layout(2), AV_SAMPLE_FMT_S16,
-                                  ac->sample_rate, av_get_default_channel_layout(ac->channels),
-                                  ac->sample_fmt, ac->sample_rate, 0, 0);
-        if (actx == NULL) {
-            LOGW("swr_alloc_set_opts failed");
-            return -7;
-        }
-
-        re = swr_init(actx);
-        if (re != 0) {
-            LOGW("swr_init failed  %d", re);
-            return -8;
-        }
-        pcm = new char[1024 * 4 * 8];
+    //软解码器
+    AVCodec *acodec = avcodec_find_decoder(ic->streams[aS]->codecpar->codec_id);
+    AVCodecContext *ac = avcodec_alloc_context3(acodec);
+    avcodec_parameters_to_context(ac, ic->streams[aS]->codecpar);
+    //打开解码器
+    re = avcodec_open2(ac, 0, 0);
+    if (re != 0) {
+        LOGW("解码音频器打开失败");
+        return 0;
     }
     AVPacket *pkt = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
@@ -168,13 +145,27 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
     long long start = GetNowMs();
     int frameCount = 0;
     char *rgb = new char[1920 * 1080 * 4];
+    char *pcm = new char[48000*4*2];
     //显示窗口初始化
     ANativeWindow *nwin = ANativeWindow_fromSurface(env, surface);
     int aa = ANativeWindow_setBuffersGeometry(nwin, outWidth, outHeight, WINDOW_FORMAT_RGBA_8888);
     ANativeWindow_Buffer wbuf;
-
-    for (;;) {
-
+    //音频采样上下文
+    SwrContext *actx = swr_alloc();
+    actx = swr_alloc_set_opts(actx, av_get_default_channel_layout(2),
+                              AV_SAMPLE_FMT_S16, ac->sample_rate,
+                              av_get_default_channel_layout(ac->channels),
+                              ac->sample_fmt, ac->sample_rate, 0, 0);
+    re = swr_init(actx);
+    if (re != 0) {
+        LOGW("swr_init failed");
+        return 0;
+    }
+    LOGW("sample_rate1 = %d,channels1 = %d ,sample_format1 = %d",
+         ac->sample_rate,
+         ac->channels,
+         ac->sample_fmt);
+    for (; ;) {
         if (GetNowMs() - start >= 3000) {
             LOGW("now decode fps is  %d", frameCount / 3);
             start = GetNowMs();
@@ -182,6 +173,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
         }
         int re = av_read_frame(ic, pkt);
         if (re != 0) {
+
             int pos = 20 * r2b(ic->streams[vS]->time_base);
             LOGW("video end %d,%d,%d", ic->streams[vS]->time_base.den,
                  ic->streams[vS]->time_base.num, pos);
@@ -189,12 +181,15 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
             continue;
         }
 
+        //发送到线程中解码  pkt 会被复制 所以可以清理
+
         AVCodecContext *cc = vc;
+
         if (pkt->stream_index != AVMEDIA_TYPE_VIDEO) {
             cc = ac;
         }
+
         re = avcodec_send_packet(cc, pkt);
-        //发送到线程中解码  pkt 会被复制 所以可以清理
         // LOGW("stream = %d,size = %d,pts = %lld, flag =%d",pkt->stream_index,pkt->size,pkt->pts,pkt->flags);
         av_packet_unref(pkt);
         if (re != 0) {
@@ -209,6 +204,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
                 //  LOGW("avcodec_receive_frame failure");
                 break;
             }
+            //        LOGW("avcodec_receive_frame success %lld",frame->pts);
             if (cc == vc) {
                 vctx = sws_getCachedContext(vctx,
                                             frame->width,
@@ -220,7 +216,6 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
                                             SWS_FAST_BILINEAR,
                                             0, 0, 0
                 );
-
                 if (vctx == NULL) {
                     LOGW("sws_getCachedContext failed");
                 } else {
@@ -233,38 +228,30 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
                                       0, frame->height,
                                       data, lines
                     );
-
-                    //////    1280 * 720     frame->linesize,  1280 640 640     1280*720  1280*720/4  1280*720/4
-                     ///     LOGW("sws_scale  %d,%d %d %d" , sizeof(frame->data), frame->width,frame->height,strlen(rgb));
+                    LOGW("sws_scale %d",h);
                     if (h > 0) {
                         ANativeWindow_lock(nwin, &wbuf, 0);
                         uint8_t *dst = (uint8_t *) wbuf.bits;
-                        memcpy(dst, rgb, outHeight * outHeight * 4);
+                        memcpy(dst, rgb, outWidth * outHeight * 4);
+                        //       LOGW("%d,%d,%d",dst[4444],dst[9999],dst[3333]);
                         ANativeWindow_unlockAndPost(nwin);
                     }
-
                 }
                 frameCount++;
-            } else if (cc == ac) {
-                // decodec pcw
+            } else {
                 uint8_t *out[2] = {0};
                 out[0] = (uint8_t *) pcm;
-                int pc = swr_convert(actx, out, frame->nb_samples, (const uint8_t **) frame->data,
-                                     frame->nb_samples);
-
-                LOGW("swr_convert %d %d %d", pc, frame->nb_samples, pcm[1008]);
+                int len = swr_convert(actx,out, frame->nb_samples, (const uint8_t **) frame->data, frame->nb_samples);
+                LOGW("swr_convert %d",len);
             }
         }
     }
+
+
     delete (rgb);
-    delete (pcm);
-    sws_freeContext(vctx);
-    if (actx != NULL) {
-        av_freep(actx);
-        actx = NULL;
-    }
+    delete(pcm);
     avformat_close_input(&ic);
-    env->ReleaseStringUTFChars(path_, url);
+    env->ReleaseStringUTFChars(url_, url);
     return 0;
 }
 

@@ -10,7 +10,7 @@ import android.view.SurfaceView;
  * Created by zhangyapeng on 18-10-12.
  */
 
-public class XPlay extends   SurfaceView implements  Runnable,SurfaceHolder.Callback {
+public class XPlay extends GLSurfaceView implements  Runnable,SurfaceHolder.Callback {
     public XPlay(Context context) {
         super(context);
         getHolder().addCallback(this);
@@ -23,12 +23,12 @@ public class XPlay extends   SurfaceView implements  Runnable,SurfaceHolder.Call
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-            new Thread(this).start();
+
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+       new Thread(this).start();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class XPlay extends   SurfaceView implements  Runnable,SurfaceHolder.Call
 
     @Override
     public void run() {
-         Open("/sdcard/aa.mp4",getHolder().getSurface());
+         Open("/sdcard/qwe.mp4",getHolder().getSurface());
     }
     public  native  int Open(String path,Object surface);
 }

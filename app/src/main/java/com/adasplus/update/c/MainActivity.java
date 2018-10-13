@@ -3,12 +3,17 @@ package com.adasplus.update.c;
 import android.Manifest;
 import android.app.Activity;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.graphics.Point;
+import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +25,8 @@ public class MainActivity extends Activity {
     static {
         System.loadLibrary("native-lib");
     }
+
+    private XPlay glSurfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +56,18 @@ public class MainActivity extends Activity {
 //        }
 //        Log.e("Adas",cpuInfo);
 
-   setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
+        glSurfaceView = (XPlay) findViewById(R.id.gl);
+        glSurfaceView.setEGLContextClientVersion(2);
+        glSurfaceView.setRenderer(new FirstOpenGLProjectRenderer(glSurfaceView.getHolder().getSurface()));
+
     }
     // public native void test();
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        glSurfaceView.onResume();
+    }
 }
