@@ -56,16 +56,6 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
     avformat_network_init();
     //注册解码器
     avcodec_register_all();
-//    FILE *file = fopen("deviceId.txt","w");
-//    LOGW("open fail errno = %d reason = %s \n", errno, strerror(errno));
-//    if(file == NULL){
-//        LOGW(" open failure");
-//
-//        return 10 ;
-//    }
-    fstream afile1;
-    afile1.open("/sdcard/asa", ios::out | ios::in | ios::trunc);
-
     AVFormatContext *ic = NULL;
 
     int re = avformat_open_input(&ic, url, 0, 0);
@@ -121,7 +111,11 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
     }
     //解码器初始化
     AVCodecContext *vc = avcodec_alloc_context3(codec);
-    avcodec_parameters_to_context(vc, ic->streams[vS]->codecpar);
+    re = avcodec_parameters_to_context(vc, ic->streams[vS]->codecpar);
+    if (re != 0) {
+        LOGW("avcodec_parameters_to_context failed");
+        return -3;
+    }
     vc->thread_count = 8;
     //打开解码器
     re = avcodec_open2(vc, 0, 0);
@@ -130,6 +124,8 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
         return -3;
     }
     AVCodecContext *ac = NULL;
+    char *pcm;
+    SwrContext *actx = NULL;
     if (aS >= 0) {
         //   //软解码器
         AVCodec *acodec = avcodec_find_decoder(ic->streams[aS]->codecpar->codec_id);
@@ -142,27 +138,43 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
             LOGW("解码音频器打开失败");
             return -5;
         }
+        actx = swr_alloc();
+        if (actx == NULL) {
+            LOGW("swr_alloc failed");
+            return -6;
+        }
 
+        actx = swr_alloc_set_opts(actx, av_get_default_channel_layout(2), AV_SAMPLE_FMT_S16,
+                                  ac->sample_rate, av_get_default_channel_layout(ac->channels),
+                                  ac->sample_fmt, ac->sample_rate, 0, 0);
+        if (actx == NULL) {
+            LOGW("swr_alloc_set_opts failed");
+            return -7;
+        }
+
+        re = swr_init(actx);
+        if (re != 0) {
+            LOGW("swr_init failed  %d", re);
+            return -8;
+        }
+        pcm = new char[1024 * 4 * 8];
     }
-
     AVPacket *pkt = av_packet_alloc();
     AVFrame *frame = av_frame_alloc();
     //初始化像素格式转换上下文
     SwsContext *vctx = NULL;
-    int outWidth = 360;
-    int outHeight = 240;
+    int outWidth = 640;
+    int outHeight = 480;
     long long start = GetNowMs();
     int frameCount = 0;
     char *rgb = new char[1920 * 1080 * 4];
     //显示窗口初始化
     ANativeWindow *nwin = ANativeWindow_fromSurface(env, surface);
-    ANativeWindow_setBuffersGeometry(nwin, outWidth, outHeight, WINDOW_FORMAT_RGBA_8888);
+    int aa = ANativeWindow_setBuffersGeometry(nwin, outWidth, outHeight, WINDOW_FORMAT_RGBA_8888);
     ANativeWindow_Buffer wbuf;
 
-    SwrContext *actx = swr_alloc();
-    actx = swr_alloc_set_opts(actx,av_get_default_channel_layout(2),AV_SAMPLE_FMT_S16,ac->sample_rate,av_get_default_channel_layout(ac->channels),ac->sample_fmt,ac->sample_rate,0,0);
-
     for (;;) {
+
         if (GetNowMs() - start >= 3000) {
             LOGW("now decode fps is  %d", frameCount / 3);
             start = GetNowMs();
@@ -197,7 +209,6 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
                 //  LOGW("avcodec_receive_frame failure");
                 break;
             }
-            //        LOGW("avcodec_receive_frame success %lld",frame->pts);
             if (cc == vc) {
                 vctx = sws_getCachedContext(vctx,
                                             frame->width,
@@ -209,15 +220,6 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
                                             SWS_FAST_BILINEAR,
                                             0, 0, 0
                 );
-
-//                if(count == 100){
-////                            fwrite(rgb,1,strlen(rgb),file);
-////                            fclose(file);
-//                    afile1.write((const char *) frame->data[0], strlen((const char *) frame->data[0]));
-//                    LOGW("write  %d  ",strlen((const char *) frame->data[0]));
-//
-//                    afile1.close();
-//                }
 
                 if (vctx == NULL) {
                     LOGW("sws_getCachedContext failed");
@@ -231,33 +233,36 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
                                       0, frame->height,
                                       data, lines
                     );
-//                                    if(count == 300){
-////                            fwrite(rgb,1,strlen(rgb),file);
-////                            fclose(file);
-//                    afile1.write((const char *) data[0], strlen((const char *)data[0]));
-//                    LOGW("write  %d  ",strlen((const char *) frame->data[0]));
-//
-//                    afile1.close();
-//                }
-                    //////    1280 * 720                    frame->linesize, 1280 640 640                                       1280*720                1280*720/4                1280*720/4
-                    //    LOGW("sws_scale  %d,%d %d %d" , sizeof(frame->data), frame->width,frame->height,strlen(rgb));
-                    if (h > 0) {
 
+                    //////    1280 * 720     frame->linesize,  1280 640 640     1280*720  1280*720/4  1280*720/4
+                     ///     LOGW("sws_scale  %d,%d %d %d" , sizeof(frame->data), frame->width,frame->height,strlen(rgb));
+                    if (h > 0) {
                         ANativeWindow_lock(nwin, &wbuf, 0);
                         uint8_t *dst = (uint8_t *) wbuf.bits;
                         memcpy(dst, rgb, outHeight * outHeight * 4);
                         ANativeWindow_unlockAndPost(nwin);
                     }
+
                 }
                 frameCount++;
-            } else if(cc == ac){
+            } else if (cc == ac) {
                 // decodec pcw
+                uint8_t *out[2] = {0};
+                out[0] = (uint8_t *) pcm;
+                int pc = swr_convert(actx, out, frame->nb_samples, (const uint8_t **) frame->data,
+                                     frame->nb_samples);
 
+                LOGW("swr_convert %d %d %d", pc, frame->nb_samples, pcm[1008]);
             }
         }
     }
     delete (rgb);
+    delete (pcm);
     sws_freeContext(vctx);
+    if (actx != NULL) {
+        av_freep(actx);
+        actx = NULL;
+    }
     avformat_close_input(&ic);
     env->ReleaseStringUTFChars(path_, url);
     return 0;
@@ -303,10 +308,10 @@ Java_com_adasplus_update_c_MainActivity_test(JNIEnv *env, jobject instance) {
 //    }
 //    in.close();
 
-    // 設定原始 YUV 的長寬
+
     const int in_width = 352;
     const int in_height = 288;
-    // 設定目的 YUV 的長寬
+
     const int out_width = 640;
     const int out_height = 480;
 
@@ -358,8 +363,6 @@ Java_com_adasplus_update_c_MainActivity_test(JNIEnv *env, jobject instance) {
     memcpy(inbuf[1], in + in_width * in_height, in_width * in_height >> 2);
     memcpy(inbuf[2], in + (in_width * in_height * 5 >> 2), in_width * in_height >> 2);
 
-// ********* 主要的 function ******
-// ********* sws_scale ************
     sws_scale(img_convert_ctx, (const uint8_t *const *) inbuf, inlinesize,
               0, in_height, outbuf, outlinesize);
 
@@ -373,7 +376,6 @@ Java_com_adasplus_update_c_MainActivity_test(JNIEnv *env, jobject instance) {
 
     fclose(fin);
     fclose(fout);
-
 
 }
 

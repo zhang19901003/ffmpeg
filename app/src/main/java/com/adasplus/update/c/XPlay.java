@@ -10,7 +10,7 @@ import android.view.SurfaceView;
  * Created by zhangyapeng on 18-10-12.
  */
 
-public class XPlay extends  SurfaceView implements  Runnable,SurfaceHolder.Callback {
+public class XPlay extends   SurfaceView implements  Runnable,SurfaceHolder.Callback {
     public XPlay(Context context) {
         super(context);
         getHolder().addCallback(this);
