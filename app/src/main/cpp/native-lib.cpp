@@ -13,6 +13,7 @@
 #define LOGF(...)__android_log_print(ANDROID_LOG_FATAL,TAG,__VA_ARGS__)
 #define SRCFILE "foreman_cif.yuv"
 #define DSTFILE "out.rgb"
+
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include <media/NdkMediaCodec.h>
@@ -27,8 +28,8 @@ extern "C" {
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
 #include <unistd.h>
-
-
+#include "stdio.h"
+#include "errno.h"
 }
 
 using namespace std;
@@ -55,6 +56,15 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
     avformat_network_init();
     //注册解码器
     avcodec_register_all();
+//    FILE *file = fopen("deviceId.txt","w");
+//    LOGW("open fail errno = %d reason = %s \n", errno, strerror(errno));
+//    if(file == NULL){
+//        LOGW(" open failure");
+//
+//        return 10 ;
+//    }
+    fstream afile1;
+    afile1.open("/sdcard/asa", ios::out | ios::in | ios::trunc);
 
     AVFormatContext *ic = NULL;
 
@@ -104,7 +114,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
     //软解码器
     AVCodec *codec = avcodec_find_decoder(ic->streams[vS]->codecpar->codec_id);
     //硬解码
-     codec = avcodec_find_decoder_by_name("h264_mediacodec");
+    codec = avcodec_find_decoder_by_name("h264_mediacodec");
     if (!codec) {
         LOGW("avcodec_find_decoder null");
         return -2;
@@ -119,12 +129,11 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
         LOGW("视频解码器打开失败");
         return -3;
     }
-
-
+    AVCodecContext *ac = NULL;
     if (aS >= 0) {
         //   //软解码器
         AVCodec *acodec = avcodec_find_decoder(ic->streams[aS]->codecpar->codec_id);
-        AVCodecContext *ac = avcodec_alloc_context3(acodec);
+        ac = avcodec_alloc_context3(acodec);
         avcodec_parameters_to_context(ac, ic->streams[aS]->codecpar);
         ac->thread_count = 8;
         //打开解码器
@@ -133,6 +142,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
             LOGW("解码音频器打开失败");
             return -5;
         }
+
     }
 
     AVPacket *pkt = av_packet_alloc();
@@ -146,8 +156,12 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
     char *rgb = new char[1920 * 1080 * 4];
     //显示窗口初始化
     ANativeWindow *nwin = ANativeWindow_fromSurface(env, surface);
-      ANativeWindow_setBuffersGeometry(nwin, outWidth, outHeight, WINDOW_FORMAT_RGBA_8888);
+    ANativeWindow_setBuffersGeometry(nwin, outWidth, outHeight, WINDOW_FORMAT_RGBA_8888);
     ANativeWindow_Buffer wbuf;
+
+    SwrContext *actx = swr_alloc();
+    actx = swr_alloc_set_opts(actx,av_get_default_channel_layout(2),AV_SAMPLE_FMT_S16,ac->sample_rate,av_get_default_channel_layout(ac->channels),ac->sample_fmt,ac->sample_rate,0,0);
+
     for (;;) {
         if (GetNowMs() - start >= 3000) {
             LOGW("now decode fps is  %d", frameCount / 3);
@@ -157,7 +171,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
         int re = av_read_frame(ic, pkt);
         if (re != 0) {
             int pos = 20 * r2b(ic->streams[vS]->time_base);
-        //    LOGW("video end %d,%d,%d", ic->streams[vS]->time_base.den,
+            LOGW("video end %d,%d,%d", ic->streams[vS]->time_base.den,
                  ic->streams[vS]->time_base.num, pos);
             av_seek_frame(ic, vS, pos, AVSEEK_FLAG_BACKWARD | AVSEEK_FLAG_FRAME);
             continue;
@@ -165,7 +179,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
 
         AVCodecContext *cc = vc;
         if (pkt->stream_index != AVMEDIA_TYPE_VIDEO) {
-            continue;
+            cc = ac;
         }
         re = avcodec_send_packet(cc, pkt);
         //发送到线程中解码  pkt 会被复制 所以可以清理
@@ -185,7 +199,6 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
             }
             //        LOGW("avcodec_receive_frame success %lld",frame->pts);
             if (cc == vc) {
-
                 vctx = sws_getCachedContext(vctx,
                                             frame->width,
                                             frame->height,
@@ -196,6 +209,15 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
                                             SWS_FAST_BILINEAR,
                                             0, 0, 0
                 );
+
+//                if(count == 100){
+////                            fwrite(rgb,1,strlen(rgb),file);
+////                            fclose(file);
+//                    afile1.write((const char *) frame->data[0], strlen((const char *) frame->data[0]));
+//                    LOGW("write  %d  ",strlen((const char *) frame->data[0]));
+//
+//                    afile1.close();
+//                }
 
                 if (vctx == NULL) {
                     LOGW("sws_getCachedContext failed");
@@ -209,16 +231,28 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring pat
                                       0, frame->height,
                                       data, lines
                     );
+//                                    if(count == 300){
+////                            fwrite(rgb,1,strlen(rgb),file);
+////                            fclose(file);
+//                    afile1.write((const char *) data[0], strlen((const char *)data[0]));
+//                    LOGW("write  %d  ",strlen((const char *) frame->data[0]));
+//
+//                    afile1.close();
+//                }
                     //////    1280 * 720                    frame->linesize, 1280 640 640                                       1280*720                1280*720/4                1280*720/4
-                          LOGW("sws_scale  %d,%d %d %d" , sizeof(frame->data), frame->width,frame->height,strlen(rgb));
+                    //    LOGW("sws_scale  %d,%d %d %d" , sizeof(frame->data), frame->width,frame->height,strlen(rgb));
                     if (h > 0) {
+
                         ANativeWindow_lock(nwin, &wbuf, 0);
                         uint8_t *dst = (uint8_t *) wbuf.bits;
-                        memcpy(dst, rgb, strlen(rgb));
+                        memcpy(dst, rgb, outHeight * outHeight * 4);
                         ANativeWindow_unlockAndPost(nwin);
                     }
                 }
                 frameCount++;
+            } else if(cc == ac){
+                // decodec pcw
+
             }
         }
     }
@@ -272,7 +306,7 @@ Java_com_adasplus_update_c_MainActivity_test(JNIEnv *env, jobject instance) {
     // 設定原始 YUV 的長寬
     const int in_width = 352;
     const int in_height = 288;
-   // 設定目的 YUV 的長寬
+    // 設定目的 YUV 的長寬
     const int out_width = 640;
     const int out_height = 480;
 
@@ -281,23 +315,23 @@ Java_com_adasplus_update_c_MainActivity_test(JNIEnv *env, jobject instance) {
     struct SwsContext *img_convert_ctx;
     uint8_t *inbuf[4];
     uint8_t *outbuf[4];
-    int inlinesize[4] = {in_width, in_width/2, in_width/2, 0};
-    int outlinesize[4] = {out_width, out_width/2, out_width/2, 0};
+    int inlinesize[4] = {in_width, in_width / 2, in_width / 2, 0};
+    int outlinesize[4] = {out_width, out_width / 2, out_width / 2, 0};
 
-    uint8_t in[352*288*3>>1];
-    uint8_t out[640*480*3>>1];
+    uint8_t in[352 * 288 * 3 >> 1];
+    uint8_t out[640 * 480 * 3 >> 1];
 
     FILE *fin = fopen(SRCFILE, "rb");
     FILE *fout = fopen(DSTFILE, "wb");
 
-    if(fin == NULL) {
+    if (fin == NULL) {
         printf("open input file %s error.\n", SRCFILE);
-        return  ;
+        return;
     }
 
-    if(fout == NULL) {
+    if (fout == NULL) {
         printf("open output file %s error.\n", DSTFILE);
-        return   ;
+        return;
     }
 
     inbuf[0] = (uint8_t *) malloc(in_width * in_height);
@@ -310,28 +344,28 @@ Java_com_adasplus_update_c_MainActivity_test(JNIEnv *env, jobject instance) {
     outbuf[2] = (uint8_t *) malloc(out_width * out_height >> 2);
     outbuf[3] = NULL;
 
-    img_convert_ctx = sws_getContext(in_width, in_height,  AV_PIX_FMT_YUV420P,
+    img_convert_ctx = sws_getContext(in_width, in_height, AV_PIX_FMT_YUV420P,
                                      out_width, out_height, AV_PIX_FMT_YUV420P, SWS_POINT,
                                      NULL, NULL, NULL);
-    if(img_convert_ctx == NULL) {
+    if (img_convert_ctx == NULL) {
         fprintf(stderr, "Cannot initialize the conversion context!\n");
-        return   ;
+        return;
     }
 
     fread(in, 1, read_size, fin);
 
-    memcpy(inbuf[0], in, in_width*in_height);
-    memcpy(inbuf[1], in+in_width*in_height, in_width*in_height>>2);
-    memcpy(inbuf[2], in+(in_width*in_height*5>>2), in_width*in_height>>2);
+    memcpy(inbuf[0], in, in_width * in_height);
+    memcpy(inbuf[1], in + in_width * in_height, in_width * in_height >> 2);
+    memcpy(inbuf[2], in + (in_width * in_height * 5 >> 2), in_width * in_height >> 2);
 
 // ********* 主要的 function ******
 // ********* sws_scale ************
     sws_scale(img_convert_ctx, (const uint8_t *const *) inbuf, inlinesize,
               0, in_height, outbuf, outlinesize);
 
-    memcpy(out, outbuf[0], out_width*out_height);
-    memcpy(out+out_width*out_height, outbuf[1], out_width*out_height>>2);
-    memcpy(out+(out_width*out_height*5>>2), outbuf[2], out_width*out_height>>2);
+    memcpy(out, outbuf[0], out_width * out_height);
+    memcpy(out + out_width * out_height, outbuf[1], out_width * out_height >> 2);
+    memcpy(out + (out_width * out_height * 5 >> 2), outbuf[2], out_width * out_height >> 2);
 
     fwrite(out, 1, write_size, fout);
 
@@ -339,8 +373,6 @@ Java_com_adasplus_update_c_MainActivity_test(JNIEnv *env, jobject instance) {
 
     fclose(fin);
     fclose(fout);
-
-
 
 
 }
