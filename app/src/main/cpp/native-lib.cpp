@@ -17,7 +17,8 @@
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include <media/NdkMediaCodec.h>
-
+#include <GLES2/gl2.h>
+#include <EGL/egl.h>
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include "libavformat/avformat.h"
@@ -33,6 +34,64 @@ extern "C" {
 }
 
 using namespace std;
+
+
+
+#define GET_STR(x) #x;
+static const char *vertexShader = GET_STR(
+        attribute vec4 aPosition; //顶点坐标
+        attribute vec2 aTexCoord; //材质定点坐标
+        varying   vec2 vTexCoord; //输出的材质坐标
+        void main() {
+            vTexCoord = vec2(aTexCoord.x, 1.0 - aTexCoord.y);
+            gl_Position = aPosition;
+        }
+);
+//片元着色器 软解码和部分x86 硬解码
+static const char *fragYUV420P = GET_STR(
+        precision mediump float; //精度
+        varying vec2 vTexCoord;  //定点着色器传递的坐标
+        uniform sampler2D yTexture; // 输入的材质 （不透明灰度，单像素）
+        uniform sampler2D uTexture;
+        uniform sampler2D vTexture;
+        void main() {
+            vec3 yuv;
+            vec3 rgb;
+            yuv.r = texture2D(yTexture, vTexCoord).r;
+            yuv.g = texture2D(uTexture, vTexCoord).r - 0.5;
+            yuv.b = texture2D(vTexture, vTexCoord).r - 0.5;
+            rgb = mat3(1.0, 1.0, 1.0,
+                       0.0, -0.39465, 2.03211,
+                       1.13983, -0.5806, 0.0) * yuv;
+            gl_FragColor = vec4(rgb, 1.0);
+        }
+);
+
+GLint InitShader(const char *code, EGLint type) {
+    //创建 shader
+    GLint sh = glCreateShader(type);
+    if (sh == 0) {
+        LOGW("glCreateShader failed %d",sh);
+        return -2;
+    }
+    //加载shader
+    glShaderSource(sh,
+                   1,//shader  数量
+                   &code, //sharder 代码
+                   0); //代码长度
+    //编译shader
+    glCompileShader(sh);
+    //获取编译情况
+    GLint  status;
+    glGetShaderiv(sh,GL_COMPILE_STATUS,&status);
+    if(status == 0){
+        LOGW("glCompileShader failed " );
+        return -3;
+    }
+    LOGW("glCompileShader success " );
+    return sh;
+}
+
 
 static double r2b(AVRational rational) {
     return rational.num == 0 || rational.den == 0 ? 0 : (double) rational.num /
@@ -201,7 +260,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
     //软解码器
     AVCodec *codec = avcodec_find_decoder(ic->streams[vS]->codecpar->codec_id);
     //硬解码
-    //  codec = avcodec_find_decoder_by_name("h264_mediacodec");
+      codec = avcodec_find_decoder_by_name("h264_mediacodec");
     if (!codec) {
         LOGW("avcodec_find_decoder null");
         return 0;
@@ -256,12 +315,160 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
     long long start = GetNowMs();
     int frameCount = 0;
     char *rgb = new char[1920 * 1080 * 4];
-
-    //显示窗口初始化
     ANativeWindow *nwin = ANativeWindow_fromSurface(env, surface);
-    ANativeWindow_setBuffersGeometry(nwin, outWidth, outHeight, WINDOW_FORMAT_RGBA_8888);
-    ANativeWindow_Buffer wbuf;
+    //display 创建 初始化
+    EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    if (display == EGL_NO_DISPLAY) {
+        LOGW("eglGetDisplay failed");
+        return -1;
+    }
+    if (EGL_TRUE != eglInitialize(display, 0, 0)) {
+        LOGW("eglInitialize failed");
+        return -2;
+    }
+    int width =1280;
+    int height = 720;
+    //surface
+    //surface 配置  窗口
+    EGLConfig config;
+    EGLint configNum;
+    EGLint configSpec[] = {
+            EGL_RED_SIZE, 8,
+            EGL_GREEN_SIZE, 8,
+            EGL_BLUE_SIZE, 8,
+            EGL_SURFACE_TYPE, EGL_WINDOW_BIT, EGL_NONE
+    };
+    if (EGL_TRUE != eglChooseConfig(display, configSpec, &config, 1, &configNum)) {
+        LOGW("eglChooseConfig failed");
+        return -3;
+    }
+    EGLSurface winsurface = eglCreateWindowSurface(display, config, nwin, 0);
+    if (winsurface == EGL_NO_SURFACE) {
+        LOGW("eglCreateWindowSurface failed");
+        return -4;
+    }
+    //context 创建关联的上下文
+    const EGLint ctxAttr[] = {
+            EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE
+    };
+    EGLContext context = eglCreateContext(display, config, EGL_NO_CONTEXT, ctxAttr);
+    if (context == EGL_NO_CONTEXT) {
+        LOGW("eglCreateContext failed");
+        return -5;
+    }
+    if (EGL_TRUE != eglMakeCurrent(display, winsurface, winsurface, context)) {
+        LOGW("eglMakeCurrent failed");
+        return -6;
+    };
+    //shader 初始化 顶点，片源
+    GLint vsh = InitShader(vertexShader, GL_VERTEX_SHADER);
+    GLint fsh = InitShader(fragYUV420P, GL_FRAGMENT_SHADER);
+    LOGW("InitShader %d %d",vsh,fsh);
+    ///////////////////////////////////////////////////
+    //穿件渲染程序
+    GLint  program = glCreateProgram();
+    if(program == 0){
+        LOGD("program failed");
+        return -7;
+    }
+    //渲染程序加入着色器代码
+    glAttachShader(program,vsh);
+    glAttachShader(program,fsh);
+    //链接程序
+    glLinkProgram(program);
+    GLint status = 0;
+    glGetProgramiv(program,GL_LINK_STATUS,&status);
+    if(status == 0){
+        LOGD("glLinkProgram failed");
+        return -7;
+    }
+    LOGD("glLinkProgram sucess");
+    glUseProgram(program);
+
+    ///////////////////////////////////////
+    //加入三维定点数据 两个三角形组成正方形
+    static float  ver[] = {
+            1.0f,-1.0f,0.0f,
+            -1.0f,-1.0f,0.0f,
+            1.0f,1.0f,0.0f,
+            -1.0f,1.0f,0.0f
+    };
+    GLuint apos =(GLuint)glGetAttribLocation(program,"aPosition");
+    glEnableVertexAttribArray(apos);
+    glVertexAttribPointer(apos,3,GL_FLOAT,GL_FALSE, 12,ver);
+    //加入材质坐标数据
+    static float  txts[] = {
+            1.0f,0.0f, //右下
+            0.0f,0.0f,
+            1.0f,1.0f,
+            0.0f,1.0f
+    };
+    GLuint atex =(GLuint)glGetAttribLocation(program,"aTexCoord");
+    glEnableVertexAttribArray(atex);
+    glVertexAttribPointer(atex,2,GL_FLOAT,GL_FALSE, 8,txts);
+
+    //材质纹理初始化
+    //设置纹理层
+    glUniform1i(glGetUniformLocation(program,"yTexture"),0); //对应纹理第一层
+    glUniform1i(glGetUniformLocation(program,"uTexture"),1);
+    glUniform1i(glGetUniformLocation(program,"vTexture"),2);
+
+    //创建opengl 纹理
+    GLuint  texts[3] = {0};
+    //创建三个纹理
+    glGenTextures(3,texts);
+    //设置纹理属性
+    glBindTexture(GL_TEXTURE_2D,texts[0]);
+    //缩小过滤器
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D,0,
+                 GL_LUMINANCE, //gpu 内部格式 亮度 灰度图
+                 width,height,
+                 0, //边框
+                 GL_LUMINANCE, // 数据的像素格式 亮度 灰度图
+                 GL_UNSIGNED_BYTE,//像素的数据类型
+                 NULL  //纹理数据
+    );
+
+    //设置纹理属性
+    glBindTexture(GL_TEXTURE_2D,texts[1]);
+    //缩小过滤器
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D,0,
+                 GL_LUMINANCE, //gpu 内部格式 亮度 灰度图
+                 width/2,height/2,
+                 0, //边框
+                 GL_LUMINANCE, // 数据的像素格式 亮度 灰度图
+                 GL_UNSIGNED_BYTE,//像素的数据类型
+                 NULL  //纹理数据
+    );
+
+    //设置纹理属性
+    glBindTexture(GL_TEXTURE_2D,texts[2]);
+    //缩小过滤器
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D,0,
+                 GL_LUMINANCE, //gpu 内部格式 亮度 灰度图
+                 width/2,height/2,
+                 0, //边框
+                 GL_LUMINANCE, // 数据的像素格式 亮度 灰度图
+                 GL_UNSIGNED_BYTE,//像素的数据类型
+                 NULL  //纹理数据
+    );
+
+//    //显示窗口初始化
+//    ANativeWindow *nwin = ANativeWindow_fromSurface(env, surface);
+//    ANativeWindow_setBuffersGeometry(nwin, outWidth, outHeight, WINDOW_FORMAT_RGBA_8888);
+//    ANativeWindow_Buffer wbuf;
     //音频采样上下文
+    unsigned  char *buf[3] = {0};
+    buf[0] = new unsigned  char[width*height];
+    buf[1] = new unsigned  char[width*height/4];
+    buf[2] = new unsigned  char[width*height/4];
+
 
     for (;;) {
         if (GetNowMs() - start >= 3000) {
@@ -304,47 +511,75 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
             }
             //        LOGW("avcodec_receive_frame success %lld",frame->pts);
             if (cc == vc) {
-                vctx = sws_getCachedContext(vctx,
-                                            frame->width,
-                                            frame->height,
-                                            (AVPixelFormat) frame->format,
-                                            outWidth,
-                                            outHeight,
-                                            AV_PIX_FMT_RGBA,
-                                            SWS_FAST_BILINEAR,
-                                            0, 0, 0
-                );
-                if (vctx == NULL) {
-                    LOGW("sws_getCachedContext failed");
-                } else {
-                    uint8_t *data[AV_NUM_DATA_POINTERS] = {0};
-                    data[0] = (uint8_t *) rgb;
-                    int lines[AV_NUM_DATA_POINTERS] = {0};
-                    // 一行宽度  根据像素格式确定大小
-                    lines[0] = outWidth * 4;
-                    int h = sws_scale(vctx, (const uint8_t *const *) frame->data, frame->linesize,
-                                      0, frame->height,
-                                      data, lines
-                    );
+//                vctx = sws_getCachedContext(vctx,
+//                                            frame->width,
+//                                            frame->height,
+//                                            (AVPixelFormat) frame->format,
+//                                            outWidth,
+//                                            outHeight,
+//                                            AV_PIX_FMT_RGBA,
+//                                            SWS_FAST_BILINEAR,
+//                                            0, 0, 0
+//                );
+                //激活第一层纹理 ,绑定到创建的opengl 纹理
 
-                    if (h > 0) {
-                        ANativeWindow_lock(nwin, &wbuf, 0);
-                        uint8_t *dst = (uint8_t *) wbuf.bits;
-                        memcpy(dst, rgb, outWidth * outHeight * 4);
-                        //       LOGW("%d,%d,%d",dst[4444],dst[9999],dst[3333]);
-                        ANativeWindow_unlockAndPost(nwin);
-                        LOGW("sws_scale %d", h);
-                    }
-                }
+
+
+
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D,texts[0]);
+                //替换纹理内容
+                glTexSubImage2D(GL_TEXTURE_2D,0,0,0,width,height,GL_LUMINANCE,GL_UNSIGNED_BYTE,frame->buf[0]->data);
+
+                //激活第2层纹理 ,绑定到创建的opengl 纹理
+                glActiveTexture(GL_TEXTURE1);
+                glBindTexture(GL_TEXTURE_2D,texts[1]);
+                //替换纹理内容
+                glTexSubImage2D(GL_TEXTURE_2D,0,0,0,width/2,height/2,GL_LUMINANCE,GL_UNSIGNED_BYTE,frame->buf[1]->data);
+
+                //激活第3层纹理 ,绑定到创建的opengl 纹理
+                glActiveTexture(GL_TEXTURE2);
+                glBindTexture(GL_TEXTURE_2D,texts[2]);
+                //替换纹理内容
+                glTexSubImage2D(GL_TEXTURE_2D,0,0,0,width/2,height/2,GL_LUMINANCE,GL_UNSIGNED_BYTE,frame->buf[2]->data);
+                //绘制
+                glDrawArrays(GL_TRIANGLE_STRIP,0,4);
+                //窗口显示
+                eglSwapBuffers(display,winsurface);
+
+
+                LOGW("%d,%d,%d",  frame->buf[0]->data[9999],frame->buf[1]->data[10086],frame->buf[2]->data[18952]);
+//                if (vctx == NULL) {
+//                    LOGW("sws_getCachedContext failed");
+//                } else {
+//                    uint8_t *data[AV_NUM_DATA_POINTERS] = {0};
+//                    data[0] = (uint8_t *) rgb;
+//                    int lines[AV_NUM_DATA_POINTERS] = {0};
+//                    // 一行宽度  根据像素格式确定大小
+//                    lines[0] = outWidth * 4;
+//                    int h = sws_scale(vctx, (const uint8_t *const *) frame->data, frame->linesize,
+//                                      0, frame->height,
+//                                      data, lines
+//                    );
+//
+//                    if (h > 0) {
+//                        ANativeWindow_lock(nwin, &wbuf, 0);
+//                        uint8_t *dst = (uint8_t *) wbuf.bits;
+//                        memcpy(dst, rgb, outWidth * outHeight * 4);
+//
+//                        ANativeWindow_unlockAndPost(nwin);
+//                        LOGW("sws_scale %d", h);
+//                    }
+//                }
                 frameCount++;
-                LOGW("sws_scale %d", frameCount);
+  //              LOGW("sws_scale %d", frameCount);
             } else {
 
                 uint8_t *out[2] = {0};
                 out[0] = (uint8_t *) pcm;
                 int len = swr_convert(actx, out, frame->nb_samples, (const uint8_t **) frame->data,
                                       frame->nb_samples);
-                LOGW("swr_convert %d", len);
+             //   LOGW("swr_convert %d", len);
             }
         }
     }

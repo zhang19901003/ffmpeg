@@ -33,28 +33,28 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        File file = new File("/sdcard/adas.yuv");
-        try {
-            inputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-//       String cpuInfo = android.os.Build.CPU_ABI;
-//        byte a [] = new byte[1280*720*15/10];
+//        File file = new File("/sdcard/adas.yuv");
 //        try {
-//            FileInputStream fileOutputStream = new FileInputStream(new File("/sdcard/asa"));
+//            inputStream = new FileInputStream(file);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+       String cpuInfo = android.os.Build.CPU_ABI;
+//        byte a [] = new byte[424*240*15/10];
+//        try {
+//            FileInputStream fileOutputStream = new FileInputStream(new File("/sdcard/lalala.yuv"));
 //            fileOutputStream.read(a);
 //
 //            fileOutputStream.close();
 //
-//           byte [] b= PicUtil.rgb2YCbCr420(a,1280,720);
+//          //   byte [] b= PicUtil.rgb2YCbCr420(a,1280,720);
 //
 //
-//            byte[] savejpeg = PicUtil.savejpeg(b, 1280, 720);
+//            byte[] savejpeg = PicUtil.savejpeg(a, 424, 240);
 //
 //
 //
-//            FileOutputStream fileOutputStream1 = new FileOutputStream(new File("/sdcard/asd.jpg"));
+//            FileOutputStream fileOutputStream1 = new FileOutputStream(new File("/sdcard/hello1.jpg"));
 //            fileOutputStream1.write(savejpeg);
 //            fileOutputStream1.close();
 //

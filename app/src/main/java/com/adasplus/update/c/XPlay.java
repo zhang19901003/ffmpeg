@@ -52,7 +52,7 @@ public class XPlay extends GLSurfaceView implements  Runnable,SurfaceHolder.Call
 //        byte bytes[] =  new byte[1024];
 //        Surface(bytes,getHolder().getSurface());
 
-        Open("/sdcard/test.mp4",getHolder().getSurface());
+        Open("/sdcard/asd.mp4",getHolder().getSurface());
 
     }
     public  native  int Open(String path,Object surface);

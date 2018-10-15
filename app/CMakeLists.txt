@@ -63,4 +63,6 @@ target_link_libraries( native-lib
                        log
                        android
                        OpenSLES
+                          GLESv2
+                                              EGL
                         )
