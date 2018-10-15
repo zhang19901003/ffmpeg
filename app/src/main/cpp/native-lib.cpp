@@ -47,6 +47,97 @@ long long GetNowMs() {
     return t;
 }
 
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_adasplus_update_c_XPlay_Surface(JNIEnv *env, jobject instance, jbyteArray yuv_,
+                                         jobject surface) {
+
+    const char *yuv = (const char *) env->GetByteArrayElements(yuv_, NULL);
+
+    av_register_all();
+    avformat_network_init();
+    //注册解码器
+    avcodec_register_all();
+
+    SwsContext *vctx = NULL;
+    int outWidth = 320;
+    int outHeight = 240;
+
+    char *rgb = new char[1920 * 1080 * 4];
+
+    //显示窗口初始化
+    ANativeWindow *nwin = ANativeWindow_fromSurface(env, surface);
+    ANativeWindow_setBuffersGeometry(nwin, outWidth, outHeight, WINDOW_FORMAT_RGBA_8888);
+    ANativeWindow_Buffer wbuf;
+
+    vctx = sws_getCachedContext(vctx,
+                                1280,
+                                720,
+                                (AVPixelFormat) 0,
+                                outWidth,
+                                outHeight,
+                                AV_PIX_FMT_RGBA,
+                                SWS_FAST_BILINEAR,
+                                0, 0, 0
+    );
+    if(vctx == NULL){
+        LOGW("sws_getCachedContext");
+    }
+//
+    uint8_t *data[AV_NUM_DATA_POINTERS] = {0};
+    data[0] = (uint8_t *) rgb;
+    int lines[AV_NUM_DATA_POINTERS] = {0};
+
+    lines[0] = outWidth * 4;
+    int linesize[] = {1280};
+
+     char* frame[8] = {0};
+     char temp [1280*720];
+     char *date = new char[1280*720];
+     frame[0] = date;
+
+
+    FILE * file =fopen("/sdcard/1512983479586.jpg","rb");
+
+    if (NULL == file)
+    {
+      LOGW("fopen failed");
+    }
+    int counta = 0;
+    while (counta<1280*720){
+
+
+        char ch=fgetc(file);
+        temp[counta] = ch;
+        counta++;
+        LOGW("??????? %d",ch);
+    }
+
+
+    LOGW("stren %d ,%s", strlen(temp),temp);
+
+    memcpy(frame[0],temp,1280*720);
+    LOGW("stren %d ,%s", strlen(frame[0]),frame[0]);
+    int h = sws_scale(vctx, (const uint8_t *const *) frame, linesize,
+                      0, 720,
+                      data, lines
+    );
+    LOGW("sws_scale %d", h);
+    if (h > 0) {
+        ANativeWindow_lock(nwin, &wbuf, 0);
+        uint8_t *dst = (uint8_t *) wbuf.bits;
+        memcpy(dst, rgb, outWidth * outHeight * 4);
+
+        ANativeWindow_unlockAndPost(nwin);
+        LOGW("sws_scale %d", h);
+    }
+
+
+    // TODO
+
+  //  env->ReleaseByteArrayElements(yuv_, yuv, 0);
+    return 0;
+}
 
 extern "C"
 JNIEXPORT jint JNICALL
@@ -110,7 +201,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
     //软解码器
     AVCodec *codec = avcodec_find_decoder(ic->streams[vS]->codecpar->codec_id);
     //硬解码
-    codec = avcodec_find_decoder_by_name("h264_mediacodec");
+    //  codec = avcodec_find_decoder_by_name("h264_mediacodec");
     if (!codec) {
         LOGW("avcodec_find_decoder null");
         return 0;
@@ -128,7 +219,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
     AVCodecContext *ac = NULL;
     char *pcm = NULL;
     SwrContext *actx = NULL;
-    if (aS == 0) {
+    if (aS >=0) {
         //软解码器
         AVCodec *acodec = avcodec_find_decoder(ic->streams[aS]->codecpar->codec_id);
         ac = avcodec_alloc_context3(acodec);
@@ -160,8 +251,8 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
     AVFrame *frame = av_frame_alloc();
     //初始化像素格式转换上下文
     SwsContext *vctx = NULL;
-    int outWidth = 640;
-    int outHeight = 480;
+    int outWidth = 320;
+    int outHeight = 240;
     long long start = GetNowMs();
     int frameCount = 0;
     char *rgb = new char[1920 * 1080 * 4];
@@ -248,6 +339,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
                 frameCount++;
                 LOGW("sws_scale %d", frameCount);
             } else {
+
                 uint8_t *out[2] = {0};
                 out[0] = (uint8_t *) pcm;
                 int len = swr_convert(actx, out, frame->nb_samples, (const uint8_t **) frame->data,
@@ -260,6 +352,11 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
 
     delete (rgb);
     delete (pcm);
+    sws_freeContext(vctx);
+    if (actx != NULL) {
+        av_freep(actx);
+        actx = NULL;
+    }
     avformat_close_input(&ic);
     env->ReleaseStringUTFChars(url_, url);
     return 0;

@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainActivity extends Activity {
 
@@ -27,10 +28,17 @@ public class MainActivity extends Activity {
     }
 
     private XPlay glSurfaceView;
+    private FileInputStream inputStream;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        File file = new File("/sdcard/adas.yuv");
+        try {
+            inputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 //       String cpuInfo = android.os.Build.CPU_ABI;
 //        byte a [] = new byte[1280*720*15/10];
 //        try {
@@ -61,7 +69,13 @@ public class MainActivity extends Activity {
         glSurfaceView.setEGLContextClientVersion(2);
         glSurfaceView.setRenderer(new FirstOpenGLProjectRenderer(glSurfaceView.getHolder().getSurface()));
 
+
+
     }
+
+
+
+
     // public native void test();
 
 
