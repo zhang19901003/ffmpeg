@@ -260,7 +260,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
     //软解码器
     AVCodec *codec = avcodec_find_decoder(ic->streams[vS]->codecpar->codec_id);
     //硬解码
-      codec = avcodec_find_decoder_by_name("h264_mediacodec");
+     // codec = avcodec_find_decoder_by_name("h264_mediacodec");
     if (!codec) {
         LOGW("avcodec_find_decoder null");
         return 0;
