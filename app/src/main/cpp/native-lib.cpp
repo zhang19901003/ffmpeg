@@ -19,7 +19,11 @@
 #include <media/NdkMediaCodec.h>
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
-
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <string>
+#include <stdexcept>
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -28,8 +32,7 @@ extern "C" {
 #include "libswresample/swresample.h"
 #include "libswscale/swscale.h"
 #include <unistd.h>
-#include <SLES/OpenSLES.h>
-#include <SLES/OpenSLES_Android.h>
+
 #include <unistd.h>
 #include "stdio.h"
 #include "errno.h"
@@ -51,6 +54,10 @@ double division(int a, int b) {
 //        return "C++ Exception";
 //    }
 //};
+
+
+
+
 
 
 class MyException {
