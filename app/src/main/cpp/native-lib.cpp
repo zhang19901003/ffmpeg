@@ -24,7 +24,7 @@
 #include <cstdlib>
 #include <string>
 #include <stdexcept>
-
+#include <pthread.h>
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include "libavformat/avformat.h"
@@ -37,7 +37,7 @@ extern "C" {
 #include "stdio.h"
 #include "errno.h"
 }
-
+#define NUM_THREADS 5
 using namespace std;
 
 double division(int a, int b) {
@@ -123,12 +123,20 @@ private:
     string message_;
 };
 
+
+void* say_hello(void* args)
+{
+    cout << "Hello Runoob！" << endl;
+    LOGE("Hello Runoob！");
+    return 0;
+}
+
 class MyExceptionD : public MyException {
 public:
     MyExceptionD(const char *message)
             : MyException(message) {
         cout << "MyExceptionD ..." << endl;
-        LOGE("MyExceptionD ...");
+
     }
 
     MyExceptionD(const MyExceptionD &other)
@@ -271,10 +279,32 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
         stringStack.pop();
     }
     catch (exception const& ex) {
-        LOGE("%s", ex.what());
-        return -1;
+
+
     }
 
+    cout << "Value of __LINE__ : " << __LINE__ << endl;
+    cout << "Value of __FILE__ : " << __FILE__ << endl;
+    cout << "Value of __DATE__ : " << __DATE__ << endl;
+    cout << "Value of __TIME__ : " << __TIME__<< endl;
+
+
+    pthread_t  tids [NUM_THREADS];
+    for(int i = 0; i < NUM_THREADS; ++i)
+    {
+
+
+        int ret = pthread_create(&tids[i], NULL, say_hello, NULL);
+        if (ret != 0)
+        {
+
+            LOGE("pthread_create error: error_code= %d", ret );
+        } else{
+            LOGE("pthread_create  success" );
+        }
+    }
+
+    LOGE("%s","end of");
     return 0;
 }
 
