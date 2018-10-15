@@ -443,9 +443,9 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
                 glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
                 //窗口显示
                 eglSwapBuffers(display, winsurface);
-
-                LOGW("%d,%d,%d", frame->buf[0]->data[9999], frame->buf[1]->data[10086],
-                     frame->buf[2]->data[18952]);
+//
+//                LOGW("%d,%d,%d", frame->buf[0]->data[9999], frame->buf[1]->data[10086],
+//                     frame->buf[2]->data[18952]);
                 frameCount++;
 
             } else {
