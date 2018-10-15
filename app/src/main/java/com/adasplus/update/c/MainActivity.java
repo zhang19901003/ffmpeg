@@ -12,18 +12,16 @@ public class MainActivity extends Activity {
         System.loadLibrary("native-lib");
     }
 
-    private XPlay glSurfaceView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        setContentView(R.layout.activity_main);
-        glSurfaceView = (XPlay) findViewById(R.id.gl);
-        glSurfaceView.setEGLContextClientVersion(2);
-        glSurfaceView.setRenderer(new FirstOpenGLProjectRenderer(glSurfaceView.getHolder().getSurface()));
+       // setContentView(R.layout.activity_main);
 
+        text();
 
 
     }
@@ -32,6 +30,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        glSurfaceView.onResume();
+
     }
+
+    public native int text();
 }
