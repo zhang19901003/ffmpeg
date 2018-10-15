@@ -1,25 +1,10 @@
 package com.adasplus.update.c;
 
-import android.Manifest;
+
 import android.app.Activity;
 
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.pm.ConfigurationInfo;
-import android.graphics.Point;
-import android.opengl.GLSurfaceView;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class MainActivity extends Activity {
 
@@ -28,41 +13,11 @@ public class MainActivity extends Activity {
     }
 
     private XPlay glSurfaceView;
-    private FileInputStream inputStream;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        File file = new File("/sdcard/adas.yuv");
-//        try {
-//            inputStream = new FileInputStream(file);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-       String cpuInfo = android.os.Build.CPU_ABI;
-//        byte a [] = new byte[424*240*15/10];
-//        try {
-//            FileInputStream fileOutputStream = new FileInputStream(new File("/sdcard/lalala.yuv"));
-//            fileOutputStream.read(a);
-//
-//            fileOutputStream.close();
-//
-//          //   byte [] b= PicUtil.rgb2YCbCr420(a,1280,720);
-//
-//
-//            byte[] savejpeg = PicUtil.savejpeg(a, 424, 240);
-//
-//
-//
-//            FileOutputStream fileOutputStream1 = new FileOutputStream(new File("/sdcard/hello1.jpg"));
-//            fileOutputStream1.write(savejpeg);
-//            fileOutputStream1.close();
-//
-//        } catch ( Exception e) {
-//            e.printStackTrace();
-//            Log.e("ffm", e.getMessage());
-//        }
-//        Log.e("Adas",cpuInfo);
+
 
         setContentView(R.layout.activity_main);
         glSurfaceView = (XPlay) findViewById(R.id.gl);
@@ -72,11 +27,6 @@ public class MainActivity extends Activity {
 
 
     }
-
-
-
-
-    // public native void test();
 
 
     @Override

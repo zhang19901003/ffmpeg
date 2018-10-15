@@ -17,8 +17,8 @@ import java.io.IOException;
  * Created by zhangyapeng on 18-10-12.
  */
 
-public class XPlay extends GLSurfaceView implements  Runnable,SurfaceHolder.Callback {
-    private FileInputStream inputStream;
+public class XPlay extends GLSurfaceView implements Runnable, SurfaceHolder.Callback {
+
     public XPlay(Context context) {
         super(context);
         getHolder().addCallback(this);
@@ -38,23 +38,20 @@ public class XPlay extends GLSurfaceView implements  Runnable,SurfaceHolder.Call
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-       new Thread(this).start();
+        new Thread(this).start();
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
     }
 
     @Override
     public void run() {
-//
-//        byte bytes[] =  new byte[1024];
-//        Surface(bytes,getHolder().getSurface());
 
-        Open("/sdcard/asd.mp4",getHolder().getSurface());
+        Open("/sdcard/qwe.mp4", getHolder().getSurface());
 
     }
-    public  native  int Open(String path,Object surface);
-    public  native  int Surface(byte[] yuv,Object surface);
+
+    public native int Open(String path, Object surface);
+
 }
