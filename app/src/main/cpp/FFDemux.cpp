@@ -7,11 +7,13 @@
 
 bool FFDemux::Open(const char *url) {
 
-    LOGW("open url %s",url);
+    LOGW("open url %s", url);
 
     return true;
 }
 
 
 XData FFDemux::Read() {
+    XData d;
+    return d;
 }
