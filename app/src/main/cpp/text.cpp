@@ -370,11 +370,9 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
     LOGE("%f *********** %f **************%f ", *(((*((*pd) + 0))(av, 3))), *((*pd)[1](av, 3)),
          *(*(*pd)[2])(av, 3));
 
+    LOGE("%p *********** %p  ",  sub , &sub );
+
     LOGE("%s", "end of");
-
-
-
-
 
     return 0;
 }
