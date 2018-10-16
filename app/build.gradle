@@ -15,6 +15,11 @@ android {
                 jniLibs.srcDirs = ['libs']
             }
         }
+
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
+
         externalNativeBuild {
             cmake {
                 cppFlags "-frtti -fexceptions"

@@ -19,7 +19,7 @@
 #include <media/NdkMediaCodec.h>
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
-
+#include "FFDemux.h"
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include "libavformat/avformat.h"
@@ -122,7 +122,8 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
     char info[10000] = {0};
     sprintf(info, "%s\n", avcodec_configuration());
     LOGE("%s", avcodec_configuration());
-
+    IDemux *d =new FFDemux();
+    d->Open(url);
     av_register_all();
     avformat_network_init();
     //注册解码器

@@ -10,6 +10,10 @@ set(distribution_DIR ../../../../libs)
 add_library( native-lib
              SHARED
              src/main/cpp/native-lib.cpp
+             src/main/cpp/IDemux.cpp
+             src/main/cpp/XLog.cpp
+             src/main/cpp/FFDemux.cpp
+             src/main/cpp/XData.cpp
 
               )
 add_library( avcodec
