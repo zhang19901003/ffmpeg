@@ -290,9 +290,9 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 
 
     pthread_t  tids [NUM_THREADS];
+
     for(int i = 0; i < NUM_THREADS; ++i)
     {
-
 
         int ret = pthread_create(&tids[i], NULL, say_hello, NULL);
         if (ret != 0)

@@ -7,9 +7,9 @@ cmake_minimum_required(VERSION 3.4.1)
 
 set(distribution_DIR ../../../../libs)
 
-add_library( native-lib
+add_library( text
              SHARED
-             src/main/cpp/native-lib.cpp
+             src/main/cpp/text.cpp
 
               )
 add_library( avcodec
@@ -53,7 +53,7 @@ set_target_properties( swscale
                        PROPERTIES IMPORTED_LOCATION
                        ${distribution_DIR}/armeabi-v7a/libswscale.so)
 include_directories(libs/include)
-target_link_libraries( native-lib
+target_link_libraries( text
                        avcodec
                        avfilter
                        avformat
