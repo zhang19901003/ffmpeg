@@ -25,6 +25,7 @@
 #include <string>
 #include <stdexcept>
 #include <pthread.h>
+
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include "libavformat/avformat.h"
@@ -55,7 +56,43 @@ double division(int a, int b) {
 //    }
 //};
 
-template <class T>
+
+const double * f1 (const double ar[],int n);
+const double * f2 (const double [], int);
+const double * f3 (const double *,int);
+
+const double * f1 (const double * ar,int n){
+  return ar;
+}
+
+        const double * f2 (const double ar[],int n){
+
+        return ar+1;
+}
+
+        const double * f3 (const double ar[],int n){
+
+        return ar+2;
+}
+
+int add(int a, int b)
+{
+    return a + b;
+}
+int sub(int a, int b)
+{
+    return a - b;
+}
+int mul(int a, int b)
+{
+    return a*b;
+}
+int div1(int a, int b)
+{
+    return a / b;
+}
+
+template<class T>
 
 class Stack {
 private:
@@ -65,21 +102,19 @@ public:
     void push(T t);  // 入栈
     void pop();               // 出栈
     T top() const;            // 返回栈顶元素
-    bool empty() const{       // 如果为空则返回真。
+    bool empty() const {       // 如果为空则返回真。
         return elems.empty();
     }
 };
 
-template <class T>
-void Stack<T>::push (T  elem)
-{
+template<class T>
+void Stack<T>::push(T elem) {
     // 追加传入元素的副本
     elems.push_back(elem);
 }
 
-template <class T>
-void Stack<T>::pop ()
-{
+template<class T>
+void Stack<T>::pop() {
     if (elems.empty()) {
         throw out_of_range("Stack<>::pop(): empty stack");
     }
@@ -87,9 +122,8 @@ void Stack<T>::pop ()
     elems.pop_back();
 }
 
-template <class T>
-T Stack<T>::top () const
-{
+template<class T>
+T Stack<T>::top() const {
     if (elems.empty()) {
         throw out_of_range("Stack<>::top(): empty stack");
     }
@@ -124,8 +158,7 @@ private:
 };
 
 
-void* say_hello(void* args)
-{
+void *say_hello(void *args) {
     cout << "Hello Runoob！" << endl;
     LOGE("Hello Runoob！");
     return 0;
@@ -163,7 +196,7 @@ void fun(int n) throw(int, MyException, MyExceptionD) {
 }
 
 template<typename T>
-  T  &Max(T  &a, T  &b) {
+T &Max(T &a, T &b) {
     return a < b ? b : a;
 }
 
@@ -264,11 +297,11 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 
 
     try {
-        Stack<int>         intStack;  // int 类型的栈
+        Stack<int> intStack;  // int 类型的栈
         Stack<string> stringStack;    // string 类型的栈
 
 
-        int a ;
+        int a;
         intStack.push(a);
 
         LOGE("%d", intStack.top());
@@ -278,7 +311,7 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
         stringStack.pop();
         stringStack.pop();
     }
-    catch (exception const& ex) {
+    catch (exception const &ex) {
 
 
     }
@@ -286,25 +319,63 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
     cout << "Value of __LINE__ : " << __LINE__ << endl;
     cout << "Value of __FILE__ : " << __FILE__ << endl;
     cout << "Value of __DATE__ : " << __DATE__ << endl;
-    cout << "Value of __TIME__ : " << __TIME__<< endl;
+    cout << "Value of __TIME__ : " << __TIME__ << endl;
 
 
-    pthread_t  tids [NUM_THREADS];
+    pthread_t tids[NUM_THREADS];
 
-    for(int i = 0; i < NUM_THREADS; ++i)
-    {
+    for (int i = 0; i < NUM_THREADS; ++i) {
 
         int ret = pthread_create(&tids[i], NULL, say_hello, NULL);
-        if (ret != 0)
-        {
+        if (ret != 0) {
 
-            LOGE("pthread_create error: error_code= %d", ret );
-        } else{
-            LOGE("pthread_create  success" );
+            LOGE("pthread_create error: error_code= %d", ret);
+        } else {
+            LOGE("pthread_create  success");
         }
     }
 
-    LOGE("%s","end of");
+
+    int a[5][5];
+    int(*p)[5];
+    p = a;
+    LOGW("%d,%p", &p[4][2] - &a[4][2], &p[4][2] - &a[4][2]);
+
+    //把函数的地址存到一个数组中，那这个数组就叫函数指针数组，  parr1 先和 [] 结合，说明parr1是数组，数组的内容是什么呢？ 是 int (*)() 类型的函数指针。
+    int (*parr1[10])();
+
+    int(*pp[5])(int x, int y) = { 0, add, sub, mul, div1 };
+    //指向函数指针数组的指针  指向函数指针数组的指针是一个 指针 ，指针指向一个 数组 ，数组的元素都是 函数指针
+    void (*(*ppp)[5])(void);
+
+
+    LOGE("%d", pp[1](10,20));
+
+
+//          double av[3] = {1112.3,1542.6,2227.9};
+//            const double * (*p1)(const double *,int) = f1;
+//            LOGE("%p *********** %d ",  p1(av,3), *p1(av,3));
+//            LOGE("%p *********** %d ",  (*p1)(av,3), *(*p1)(av,3));
+//
+//            const double * (*pa[3])(const double * ,int) = {f1,f2,f3};
+//            for(int i = 0;i<3;i++){
+//
+//             LOGE("%p *********** %d ", (*(pa+i))(av,3),  *(*(pa+i))(av,3));
+//            }
+//
+//
+//             const double*  (*(*pd)[3])(const double * ,int) = &pa;
+//             LOGE("%p *********** %p **************%p ",(*pd)[0](av,3),   (*pd)[1](av,3),(*pd)[2](av,3));
+//             LOGE("%d *********** %d **************%d ",*((*((*pd)+0))(av,3)),   (*(*pd)[1])(av,3),*(**((*pd)+2))(av,3);
+
+
+
+
+
+
+    LOGE("%s", "end of");
+
+
     return 0;
 }
 
