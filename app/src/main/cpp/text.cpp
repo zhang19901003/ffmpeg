@@ -352,17 +352,16 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
     LOGE("%d", pp[1](10, 20));
 
 
-    double av[3] = {1112.3, 1542.6, 2227.9};
+    double av[3] = {1234.3, 6952.6, 9185.9};
     const double *(*p1)(const double *, int) = f1;
     LOGE("%p *********** %f ", p1(av, 3), *p1(av, 3));
     LOGE("%p *********** %f ", (*p1)(av, 3), *(*p1)(av, 3));
 
-    const double *(*pa[3])(const double *, int) = {f1, f2, f3};
+    const double* (*pa[3])(const double *, int) = {f1, f2, f3};
     for (int i = 0; i < 3; i++) {
 
         LOGE("%p *********** %f ", (*(pa + i))(av, 3), *(**(pa + i))(av, 3));
     }
-
 
     const double* (*(*pd)[3])(const double *, int);
     pd = &pa;
