@@ -17,14 +17,14 @@ import static android.opengl.GLES20.glViewport;
  * Created by zhangyapeng on 17-7-19.
  */
 
-public class FirstOpenGLProjectRenderer implements GLSurfaceView.Renderer {
+public class GlRender implements GLSurfaceView.Renderer {
 
 
-    public FirstOpenGLProjectRenderer(Surface surface) {
-        this.surface = surface;
+    public GlRender( ) {
+
     }
 
-    private Surface surface;
+
 
 
     @Override

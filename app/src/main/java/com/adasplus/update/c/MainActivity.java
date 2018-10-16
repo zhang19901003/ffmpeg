@@ -18,13 +18,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_main);
         glSurfaceView = (XPlay) findViewById(R.id.gl);
         glSurfaceView.setEGLContextClientVersion(2);
-        glSurfaceView.setRenderer(new FirstOpenGLProjectRenderer(glSurfaceView.getHolder().getSurface()));
-
-
+        glSurfaceView.setRenderer(new GlRender());
 
     }
 
