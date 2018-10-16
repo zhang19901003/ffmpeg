@@ -57,38 +57,39 @@ double division(int a, int b) {
 //};
 
 
-const double * f1 (const double ar[],int n);
-const double * f2 (const double [], int);
-const double * f3 (const double *,int);
+const double *f1(const double ar[], int n);
 
-const double * f1 (const double * ar,int n){
-  return ar;
+const double *f2(const double [], int);
+
+const double *f3(const double *, int);
+
+const double *f1(const double *ar, int n) {
+    return ar;
 }
 
-        const double * f2 (const double ar[],int n){
+const double *f2(const double ar[], int n) {
 
-        return ar+1;
+    return ar + 1;
 }
 
-        const double * f3 (const double ar[],int n){
+const double *f3(const double ar[], int n) {
 
-        return ar+2;
+    return ar + 2;
 }
 
-int add(int a, int b)
-{
+int add(int a, int b) {
     return a + b;
 }
-int sub(int a, int b)
-{
+
+int sub(int a, int b) {
     return a - b;
 }
-int mul(int a, int b)
-{
-    return a*b;
+
+int mul(int a, int b) {
+    return a * b;
 }
-int div1(int a, int b)
-{
+
+int div1(int a, int b) {
     return a / b;
 }
 
@@ -286,9 +287,9 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
     int j = 20;
     LOGE("%d", Max(i, j));
 
-    double f1 = 13.5;
-    double f2 = 20.7;
-    LOGE("%f", Max(f1, f2));
+//    double f1 = 13.5;
+//    double f2 = 20.7;
+//    LOGE("%f", Max(f1, f2));
 
     string s1 = "Hello";
     string s2 = "World";
@@ -335,7 +336,6 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
         }
     }
 
-
     int a[5][5];
     int(*p)[5];
     p = a;
@@ -344,36 +344,36 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
     //把函数的地址存到一个数组中，那这个数组就叫函数指针数组，  parr1 先和 [] 结合，说明parr1是数组，数组的内容是什么呢？ 是 int (*)() 类型的函数指针。
     int (*parr1[10])();
 
-    int(*pp[5])(int x, int y) = { 0, add, sub, mul, div1 };
+    int (*pp[5])(int x, int y) = {0, add, sub, mul, div1};
     //指向函数指针数组的指针  指向函数指针数组的指针是一个 指针 ，指针指向一个 数组 ，数组的元素都是 函数指针
     void (*(*ppp)[5])(void);
 
 
-    LOGE("%d", pp[1](10,20));
+    LOGE("%d", pp[1](10, 20));
 
 
-//          double av[3] = {1112.3,1542.6,2227.9};
-//            const double * (*p1)(const double *,int) = f1;
-//            LOGE("%p *********** %d ",  p1(av,3), *p1(av,3));
-//            LOGE("%p *********** %d ",  (*p1)(av,3), *(*p1)(av,3));
-//
-//            const double * (*pa[3])(const double * ,int) = {f1,f2,f3};
-//            for(int i = 0;i<3;i++){
-//
-//             LOGE("%p *********** %d ", (*(pa+i))(av,3),  *(*(pa+i))(av,3));
-//            }
-//
-//
-//             const double*  (*(*pd)[3])(const double * ,int) = &pa;
-//             LOGE("%p *********** %p **************%p ",(*pd)[0](av,3),   (*pd)[1](av,3),(*pd)[2](av,3));
-//             LOGE("%d *********** %d **************%d ",*((*((*pd)+0))(av,3)),   (*(*pd)[1])(av,3),*(**((*pd)+2))(av,3);
+    double av[3] = {1112.3, 1542.6, 2227.9};
+    const double *(*p1)(const double *, int) = f1;
+    LOGE("%p *********** %f ", p1(av, 3), *p1(av, 3));
+    LOGE("%p *********** %f ", (*p1)(av, 3), *(*p1)(av, 3));
+
+    const double *(*pa[3])(const double *, int) = {f1, f2, f3};
+    for (int i = 0; i < 3; i++) {
+
+        LOGE("%p *********** %f ", (*(pa + i))(av, 3), *(**(pa + i))(av, 3));
+    }
 
 
-
-
-
+    const double* (*(*pd)[3])(const double *, int);
+    pd = &pa;
+    LOGE("%p *********** %p **************%p ",  (*(*pd)[0])(av, 3), (*(*pd)[1])(av, 3),  (*(*pd)[2])(av, 3));
+    LOGE("%f *********** %f **************%f ", *(((*((*pd) + 0))(av, 3))), *((*pd)[1](av, 3)),
+         *(*(*pd)[2])(av, 3));
 
     LOGE("%s", "end of");
+
+
+
 
 
     return 0;
