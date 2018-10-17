@@ -14,6 +14,7 @@ public:
     virtual XData Read();
     FFDemux();
 
+
 private:
     AVFormatContext *ic = 0;
 };

@@ -12,6 +12,7 @@ class IDemux {
 public:
     virtual bool Open(const char* url) = 0;
     virtual XData Read() = 0;
+    int totalMs = 0;
 };
 
 

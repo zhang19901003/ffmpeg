@@ -13,15 +13,23 @@ extern "C" {
 bool FFDemux::Open(const char *url) {
 
     LOGW("open url %s", url);
-    int re = avformat_open_input(&ic,url,0,0);
+    int re = avformat_open_input(&(this->ic),url,0,0);
     if(re!=0){
         char buf[1000];
         av_strerror(re,buf,sizeof(buf));
         LOGE("open failed %s",buf);
         return false;
     }
-
     LOGE("open file success");
+    //flv h264 格式获取不到时长 nb_stream（没有头部信息） 用这个方法去读取一段数据 做探测
+    // 但是此方法不能保证所有格式都能获取时长，只能通过遍历帧数获取时长
+    re = avformat_find_stream_info(ic, 0);
+    if (re != 0) {
+        LOGE("%s", "avformat_find_stream_info failure");
+    }
+
+    this->totalMs = ic->duration/(AV_TIME_BASE/1000);
+    LOGE("ffmpeg total = %d",totalMs);
 
     return true;
 }
@@ -29,6 +37,16 @@ bool FFDemux::Open(const char *url) {
 
 XData FFDemux::Read() {
     XData d;
+    if(!ic) return XData();
+    AVPacket *pkt =av_packet_alloc();
+    int re =av_read_frame(ic,pkt);
+    if(re!=0){
+        av_packet_free(&pkt);
+        return XData();
+    }
+    LOGE("pack size is %d , pts = %lld",pkt->size,pkt->pts);
+    d.data= (unsigned char *) pkt;
+    d.size = pkt->size;
     return d;
 }
 
