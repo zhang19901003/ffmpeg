@@ -5,15 +5,16 @@
 #ifndef C_PROJECT_FFDEMUX_H
 #define C_PROJECT_FFDEMUX_H
 
-
 #include "IDemux.h"
-
-class FFDemux : public IDemux{
+struct AVFormatContext;
+class FFDemux : public IDemux {
 
 public:
     virtual bool Open(const char *url);
     virtual XData Read();
+    FFDemux();
+
+private:
+    AVFormatContext *ic = 0;
 };
-
-
 #endif //C_PROJECT_FFDEMUX_H
