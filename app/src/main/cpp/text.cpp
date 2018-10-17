@@ -203,6 +203,10 @@ T &Max(T &a, T &b) {
     return a < b ? b : a;
 }
 
+struct  Data{
+    int a = 0;
+    char *x = 0;
+};
 
 extern "C"
 JNIEXPORT jint JNICALL
