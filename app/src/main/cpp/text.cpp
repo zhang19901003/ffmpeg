@@ -13,7 +13,8 @@
 #define LOGF(...)__android_log_print(ANDROID_LOG_FATAL,TAG,__VA_ARGS__)
 #define SRCFILE "foreman_cif.yuv"
 #define DSTFILE "out.rgb"
-
+#include <thread>
+#include <iostream>
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include <media/NdkMediaCodec.h>
@@ -90,6 +91,7 @@ int mul(int a, int b) {
 }
 
 int div1(int a, int b) {
+
     return a / b;
 }
 
@@ -233,6 +235,8 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 //    {
 //        LOGE("exception caught");
 //    }
+
+
 
     try {
         fun(1);
