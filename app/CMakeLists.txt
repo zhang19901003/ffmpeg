@@ -14,6 +14,7 @@ add_library( native-lib
              src/main/cpp/XLog.cpp
              src/main/cpp/FFDemux.cpp
              src/main/cpp/XData.cpp
+             src/main/cpp/XThread.cpp
 
               )
 add_library( avcodec

@@ -7,12 +7,14 @@
 
 
 #include "XData.h"
+#include "XThread.h"
 
-class IDemux {
+class IDemux : public XThread{
 public:
     virtual bool Open(const char* url) = 0;
     virtual XData Read() = 0;
     int totalMs = 0;
+    virtual void Main();
 };
 
 

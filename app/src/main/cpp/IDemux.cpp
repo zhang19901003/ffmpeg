@@ -3,3 +3,14 @@
 //
 
 #include "IDemux.h"
+#include "XLog.h"
+
+void IDemux ::Main() {
+    for (; ;) {
+        XData xData= Read();
+        LOGE("XDATA SIZE  %d",xData.size);
+        if(xData.size == 0){
+            break;
+        }
+    }
+}
