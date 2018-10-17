@@ -95,6 +95,27 @@ int div1(int a, int b) {
     return a / b;
 }
 
+
+class Person
+{
+    // 纯虚函数
+public:
+    virtual void Display () = 0;
+
+protected :
+    string _name ; // 姓名
+};
+
+class Student : public Person
+{
+
+    void  Display(){
+        _name = "asas";
+        LOGE("asasa %s",_name.c_str());
+    }
+
+};
+
 template<class T>
 
 class Stack {
@@ -381,6 +402,9 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 
     LOGE("%s", "end of");
 
+
+    Person *person =  new Student();
+    person->Display();
     return 0;
 }
 
