@@ -6,7 +6,7 @@
 #include "XLog.h"
 
 void IDemux ::Main() {
-    for (; ;) {
+    while (!isExit) {
         XData xData= Read();
         LOGE("XDATA SIZE  %d",xData.size);
         if(xData.size == 0){

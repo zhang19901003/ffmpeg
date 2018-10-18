@@ -15,6 +15,8 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
     IDemux *id =  new FFDemux();
     id->Open(url);
     id->Start();
+    XSleep(50);
+    id->Stop();
     return 0;
 }
 

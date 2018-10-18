@@ -5,6 +5,7 @@
 #ifndef C_PROJECT_XTHREAD_H
 #define C_PROJECT_XTHREAD_H
 
+void XSleep (int mis);
 
 class XThread {
 public:
@@ -16,6 +17,9 @@ public:
 
 private:
     void ThreadMain();
+protected:
+    bool isExit = false;
+    bool isRuning = false;
 };
 
 
