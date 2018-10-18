@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
-
+//https://www.jianshu.com/p/eed347f56d76    nv21 -- rgb
 #define TAG "ffmpeg"
 #define LOGD(...)__android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
 #define LOGI(...)__android_log_print(ANDROID_LOG_INFO,TAG,__VA_ARGS__)
