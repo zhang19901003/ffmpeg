@@ -109,11 +109,19 @@ protected :
 class Student : public Person
 {
 
-    void  Display(){
-        _name = "asas";
+    virtual void  Display(){
+        _name = "Student";
         LOGE("asasa %s",_name.c_str());
     }
 
+};
+
+class Student1 :public Student{
+
+    void  Display(){
+        _name = "Student1";
+        LOGE("asasaaaaaa %s",_name.c_str());
+    }
 };
 
 template<class T>
@@ -404,6 +412,8 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 
 
     Person *person =  new Student();
+    Person *person1 =  new Student1();
+    person1->Display();
     person->Display();
     return 0;
 }
