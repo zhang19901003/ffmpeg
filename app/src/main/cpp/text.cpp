@@ -236,6 +236,14 @@ struct Data {
     char *x = 0;
 };
 
+class A{
+    int a ;
+    virtual void asd(){
+
+    }
+};
+
+
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
@@ -409,6 +417,7 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
     LOGE("%p *********** %p  ", sub, &sub);
 
     LOGE("%s", "end of");
+    LOGE("size of  %d", sizeof(A));
 
 
     Person *person = new Student();
