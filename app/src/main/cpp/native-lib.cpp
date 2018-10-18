@@ -5,6 +5,12 @@
 #include <iostream>
 #include <fstream>
 //https://www.jianshu.com/p/eed347f56d76    nv21 -- rgb
+/**
+ * I420: YYYYYYYY UU VV    =>YUV420P
+YV12: YYYYYYYY VV UU    =>YUV420P
+NV12: YYYYYYYY UVUV     =>YUV420SP
+NV21: YYYYYYYY VUVU     =>YUV420SP
+ */
 #define TAG "ffmpeg"
 #define LOGD(...)__android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
 #define LOGI(...)__android_log_print(ANDROID_LOG_INFO,TAG,__VA_ARGS__)
@@ -35,6 +41,7 @@ extern "C" {
 }
 
 using namespace std;
+
 
 
 #define GET_STR(x) #x;
