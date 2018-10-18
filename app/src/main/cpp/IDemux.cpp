@@ -9,7 +9,9 @@ void IDemux ::Main() {
     while (!isExit) {
         XData xData= Read();
         LOGE("XDATA SIZE  %d",xData.size);
-        if(xData.size == 0){
+        if(xData.size>0){
+            Notify(xData);
+        } else{
             break;
         }
     }

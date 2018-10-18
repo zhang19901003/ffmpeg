@@ -15,6 +15,7 @@ add_library( native-lib
              src/main/cpp/FFDemux.cpp
              src/main/cpp/XData.cpp
              src/main/cpp/XThread.cpp
+             src/main/cpp/IObserver.cpp
 
               )
 add_library( avcodec

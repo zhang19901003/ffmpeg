@@ -8,8 +8,9 @@
 
 #include "XData.h"
 #include "XThread.h"
+#include "IObserver.h"
 
-class IDemux : public XThread{
+class IDemux : public IObserver{
 public:
     virtual bool Open(const char* url) = 0;
     virtual XData Read() = 0;
