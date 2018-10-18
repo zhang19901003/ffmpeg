@@ -58,7 +58,24 @@ FFDemux::FFDemux() {
         avcodec_register_all();
         avformat_network_init();
     }
+
 }
+XParameter FFDemux::GetPara() {
+    if (!ic) {
+        LOGE("GetPara failed ");
+        return XParameter();
+    }
+    //获取视频流的索引
+    int re = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, 0, 0);
+    if(re<0){
+        LOGE("av_find_best_stream failed ");
+        return XParameter();
+    }
+    XParameter xParameter;
+    xParameter.para=ic->streams[re]->codecpar;
+    return xParameter;
+
+};
 
 
 

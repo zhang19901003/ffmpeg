@@ -2,6 +2,7 @@
 #include <string>
 #include "FFDemux.h"
 #include "XLog.h"
+#include "FFdecoder.h"
 
 using namespace std;
 
@@ -21,9 +22,10 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
     TestObs*tobs=new TestObs();
     id->AddObs(tobs);
     id->Open(url);
+    IDecode *vdecode =   new FFdecoder();
+    vdecode->Open(id->GetPara());
     id->Start();
     XSleep(50);
-
     id->Stop();
     return 0;
 }

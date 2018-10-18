@@ -9,6 +9,7 @@
 #include "XData.h"
 #include "XThread.h"
 #include "IObserver.h"
+#include "XParameter.h"
 
 class IDemux : public IObserver{
 public:
@@ -16,6 +17,7 @@ public:
     virtual XData Read() = 0;
     int totalMs = 0;
     virtual void Main();
+    virtual XParameter GetPara() = 0;
 };
 
 

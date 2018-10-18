@@ -13,7 +13,7 @@ public:
     virtual bool Open(const char *url);
     virtual XData Read();
     FFDemux();
-
+    virtual XParameter GetPara();
 
 private:
     AVFormatContext *ic = 0;
