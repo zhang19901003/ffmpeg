@@ -66,7 +66,7 @@ static const char *fragYUV420P = GET_STR(
             vec3 yuv;
             vec3 rgb;
             yuv.r = texture2D(yTexture, vTexCoord).r;
-            yuv.g = texture2D(uTexture, vTexCoord).r - 0.5;
+            yuv.g = texture2D(uTexture, vTexCoord).r -0.9;
             yuv.b = texture2D(vTexture, vTexCoord).r - 0.5;
             rgb = mat3(1.0, 1.0, 1.0,
                        0.0, -0.39465, 2.03211,
@@ -306,7 +306,7 @@ Java_com_adasplus_update_c_XPlay_Open(JNIEnv *env, jobject instance, jstring url
             1.0f, 1.0f, 0.0f,
             -1.0f, 1.0f, 0.0f
     };
-    GLuint apos = (GLuint) glGetAttribLocation(program, "aPosition");
+    unsigned int apos = (unsigned int) glGetAttribLocation(program, "aPosition");
     glEnableVertexAttribArray(apos);
     glVertexAttribPointer(apos, 3, GL_FLOAT, GL_FALSE, 12, ver);
     //加入材质坐标数据
