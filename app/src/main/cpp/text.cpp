@@ -13,6 +13,7 @@
 #define LOGF(...)__android_log_print(ANDROID_LOG_FATAL,TAG,__VA_ARGS__)
 #define SRCFILE "foreman_cif.yuv"
 #define DSTFILE "out.rgb"
+
 #include <thread>
 #include <iostream>
 #include <android/native_window.h>
@@ -96,31 +97,29 @@ int div1(int a, int b) {
 }
 
 
-class Person
-{
+class Person {
     // 纯虚函数
 public:
-    virtual void Display () = 0;
+    virtual void Display() = 0;
 
 protected :
-    string _name ; // 姓名
+    string _name; // 姓名
 };
 
-class Student : public Person
-{
+class Student : public Person {
 
-    virtual void  Display(){
+    virtual void Display() {
         _name = "Student";
-        LOGE("asasa %s",_name.c_str());
+        LOGE("asasa %s", _name.c_str());
     }
 
 };
 
-class Student1 :public Student{
+class Student1 : public Student {
 
-    void  Display(){
+    void Display() {
         _name = "Student1";
-        LOGE("asasaaaaaa %s",_name.c_str());
+        LOGE("asasaaaaaa %s", _name.c_str());
     }
 };
 
@@ -232,7 +231,7 @@ T &Max(T &a, T &b) {
     return a < b ? b : a;
 }
 
-struct  Data{
+struct Data {
     int a = 0;
     char *x = 0;
 };
@@ -390,29 +389,30 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 
 
     double av[3] = {1234.3, 6952.6, 9185.9};
-    const double *(*p1)(const double *, int) = f1;
-    LOGE("%p *********** %f ", p1(av, 3), *p1(av, 3));
+    const double *(*p1)(const double *, int) = &f1;
+    LOGE("%p *********** %.2f ", p1(av, 3), *p1(av, 3));
     LOGE("%p *********** %f ", (*p1)(av, 3), *(*p1)(av, 3));
 
-    const double* (*pa[3])(const double *, int) = {f1, f2, f3};
+    const double *(*pa[3])(const double *, int) = {&f1, &f2, &f3};
     for (int i = 0; i < 3; i++) {
 
         LOGE("%p *********** %f ", (*(pa + i))(av, 3), *(**(pa + i))(av, 3));
     }
 
-    const double* (*(*pd)[3])(const double *, int);
+    const double *(*(*pd)[3])(const double *, int);
     pd = &pa;
-    LOGE("%p *********** %p **************%p ",  (*(*pd)[0])(av, 3), (*(*pd)[1])(av, 3),  (*(*pd)[2])(av, 3));
+    LOGE("%p *********** %p **************%p ", (*(*pd)[0])(av, 3), (*(*pd)[1])(av, 3),
+         (*(*pd)[2])(av, 3));
     LOGE("%f *********** %f **************%f ", *(((*((*pd) + 0))(av, 3))), *((*pd)[1](av, 3)),
          *(*(*pd)[2])(av, 3));
 
-    LOGE("%p *********** %p  ",  sub , &sub );
+    LOGE("%p *********** %p  ", sub, &sub);
 
     LOGE("%s", "end of");
 
 
-    Person *person =  new Student();
-    Person *person1 =  new Student1();
+    Person *person = new Student();
+    Person *person1 = new Student1();
     person1->Display();
     person->Display();
     return 0;
