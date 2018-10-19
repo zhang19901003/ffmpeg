@@ -10,6 +10,7 @@ set(distribution_DIR ../../../../libs)
 add_library( text
              SHARED
              src/main/cpp/text.cpp
+             src/main/cpp/TextSig.cpp
 
               )
 add_library( avcodec

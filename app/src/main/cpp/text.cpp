@@ -27,6 +27,7 @@
 #include <string>
 #include <stdexcept>
 #include <pthread.h>
+#include "TextSig.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -95,6 +96,8 @@ int div1(int a, int b) {
 
     return a / b;
 }
+
+
 
 
 class Person {
@@ -424,6 +427,9 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
     Person *person1 = new Student1();
     person1->Display();
     person->Display();
+   TextSig* asdas = TextSig::Get();
+   TextSig* asdad = TextSig::Get();
+    LOGE("%p   %p", asdas,asdad);
     return 0;
 }
 
