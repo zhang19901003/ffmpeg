@@ -98,8 +98,6 @@ int div1(int a, int b) {
 }
 
 
-
-
 class Person {
     // 纯虚函数
 public:
@@ -193,8 +191,8 @@ private:
 
 
 void *say_hello(void *args) {
-    cout << "Hello Runoob！" << endl;
-    LOGE("Hello Runoob！");
+
+    //  LOGE("Hello Runoob！");
     return 0;
 }
 
@@ -239,34 +237,49 @@ struct Data {
     char *x = 0;
 };
 
-class A{
-    int a ;
-    virtual void asd(){
+class A {
+    int a;
+
+    virtual void asd() {
 
     }
 };
-class B{
 
-public: static B* get(){
+class B {
 
-        B b;
+public:
+    static B *get() {
+
+        static B b;
         return &b;
     }
 
-    ~B(){
+    B() {
+        LOGE("gou zao han shu");
+    }
+
+    ~B() {
         LOGE("xi gou hanshu");
     }
-int number = 14;
-    B* get1(){
+
+    int number = 14;
+
+    B *get1() {
         B b;
         return &b;
     }
 
-    B* get2(){
+    B *get2() {
         B b;
         return &b;
     }
 };
+
+int c = 100;
+void TestRenfen(  int *&a){
+    a = &c;
+}
+
 
 extern "C"
 JNIEXPORT jint JNICALL
@@ -448,17 +461,34 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
     Person *person1 = new Student1();
     person1->Display();
     person->Display();
-   TextSig* asdas = TextSig::Get();
-   TextSig* asdad = TextSig::Get();
-    LOGE("%p   %p", asdas,asdad);
-    B::get()->number =20;
-    LOGE("number  is  %d",  B::get()->number);
-    B b;
-    B b2;
-    LOGE("****%p   %p",  &b,  &b2);
-    for(;;){
+    TextSig *asdas = TextSig::Get();
+    TextSig *asdad = TextSig::Get();
+    LOGE("--------%p   %p", asdas, asdad);
+    B::get()->number = 20;
+//    LOGE("number  is  %d",  B::get()->number);
 
-    }
+    B *b3 = B::get();
+    B b5  ;
+    B *b4 = B::get();
+    LOGE("****%p   %p  %p",   b3,  b4,&b5);
+    b3->number = 100;
+    b4->number = 200;
+    b5.number = 300;
+
+    LOGE("hahahahahahah%d   %d  %d",   b3->number,  b4->number, b5.number);
+        LOGE("****%d   %d  %d",   b3->number,  b4->number, b5.number);
+        LOGE("****%p   %p  %p",   b3,  b4, &b5);
+
+    B *basa = new B();
+    delete basa;
+
+    int n111 = 2;
+    int *pn = &n111;
+    TestRenfen(pn);
+    LOGE("****%d   " ,    *pn);
+
     return 0;
+
+
 }
 
