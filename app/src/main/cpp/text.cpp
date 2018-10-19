@@ -245,7 +245,28 @@ class A{
 
     }
 };
+class B{
 
+public: static B* get(){
+
+        B b;
+        return &b;
+    }
+
+    ~B(){
+        LOGE("xi gou hanshu");
+    }
+int number = 14;
+    B* get1(){
+        B b;
+        return &b;
+    }
+
+    B* get2(){
+        B b;
+        return &b;
+    }
+};
 
 extern "C"
 JNIEXPORT jint JNICALL
@@ -430,6 +451,14 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
    TextSig* asdas = TextSig::Get();
    TextSig* asdad = TextSig::Get();
     LOGE("%p   %p", asdas,asdad);
+    B::get()->number =20;
+    LOGE("number  is  %d",  B::get()->number);
+    B b;
+    B b2;
+    LOGE("****%p   %p",  &b,  &b2);
+    for(;;){
+
+    }
     return 0;
 }
 
