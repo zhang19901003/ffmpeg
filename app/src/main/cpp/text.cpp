@@ -109,6 +109,7 @@ protected :
 
 class Student : public Person {
 
+private:
     virtual void Display() {
         _name = "Student";
         LOGE("asasa %s", _name.c_str());
@@ -141,7 +142,7 @@ public:
 
 template<class T>
 void Stack<T>::push(T elem) {
-    // 追加传入元素的副本
+
     elems.push_back(elem);
 }
 
@@ -248,18 +249,20 @@ class A {
 class B {
 
 public:
-    static B *get() {
 
-        static B b;
-        return &b;
+
+    static B *const get() {
+
+        return b1;
     }
 
-    B() {
-        LOGE("gou zao han shu");
-    }
 
     ~B() {
         LOGE("xi gou hanshu");
+    }
+
+    B(const B &b) {
+        LOGE("xkaobei  hanshu");
     }
 
     int number = 14;
@@ -273,10 +276,21 @@ public:
         B b;
         return &b;
     }
+
+private:
+    B() {
+        LOGE("gou zao han shu");
+
+    }
+
+    static B *const b1;
 };
 
+B *const B::b1 = new B;
+
 int c = 100;
-void TestRenfen(  int *&a){
+
+void TestRenfen(int *&a) {
     a = &c;
 }
 
@@ -464,28 +478,41 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
     TextSig *asdas = TextSig::Get();
     TextSig *asdad = TextSig::Get();
     LOGE("--------%p   %p", asdas, asdad);
-    B::get()->number = 20;
+    //   B::get()->number = 20;
 //    LOGE("number  is  %d",  B::get()->number);
 
-    B *b3 = B::get();
-    B b5  ;
-    B *b4 = B::get();
-    LOGE("****%p   %p  %p",   b3,  b4,&b5);
-    b3->number = 100;
-    b4->number = 200;
-    b5.number = 300;
+    B *const b3 = B::get();
+   // b3 = NULL;
+   //  delete (b3);
 
-    LOGE("hahahahahahah%d   %d  %d",   b3->number,  b4->number, b5.number);
-        LOGE("****%d   %d  %d",   b3->number,  b4->number, b5.number);
-        LOGE("****%p   %p  %p",   b3,  b4, &b5);
+    LOGE("--------%p   %p", asdas, asdad);
+    //   B b5 = *b3;
+//    B *b4 = B::get();
+//    B b6;
+//    LOGE("****%p   %p  %p", b3, b4, &b5);
+//    b3->number = 100;
+//    b4->number = 200;
+//    b5.number = 300;
+//    b6.number = 400;
+//
+//    LOGE("hahahahahahah%d   %d  %d", b3->number, b4->number, b5.number);
+//    LOGE("****%d   %d  %d ,%d", b3->number, b4->number, b5.number,b6.number);
+//    LOGE("****%p   %p  %p", b3, b4, &b5);
+//
+//    B *basa = new B();
+//    delete basa;
+//
+//    int n111 = 2;
+//    int const *const pn = &n111;
 
-    B *basa = new B();
-    delete basa;
 
-    int n111 = 2;
-    int *pn = &n111;
-    TestRenfen(pn);
-    LOGE("****%d   " ,    *pn);
+
+//    TestRenfen(pn);
+//    LOGE("****%d   ", *pn);
+//    B b1(*basa);
+
+
+
 
     return 0;
 
