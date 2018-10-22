@@ -99,12 +99,12 @@ int div1(int a, int b) {
 
 
 class Person {
-    // 纯虚函数
+
 public:
     virtual void Display() = 0;
 
 protected :
-    string _name; // 姓名
+    string _name;
 };
 
 class Student : public Person {
@@ -256,6 +256,10 @@ public:
         return b1;
     }
 
+    void setValue(){
+        number = 15;
+    }
+
 
     ~B() {
         LOGE("xi gou hanshu");
@@ -293,6 +297,27 @@ int c = 100;
 void TestRenfen(int *&a) {
     a = &c;
 }
+
+typedef void (*Fun)(int);
+
+
+void caller(Fun pCallback)
+{
+    Fun   p = pCallback;
+
+    int result = 1;
+
+    (*p)(result);
+}
+
+
+void callback(int a)//回调函数
+{
+    LOGE("callback result =  %d",a);
+
+}
+
+
 
 
 extern "C"
@@ -510,6 +535,8 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 //    TestRenfen(pn);
 //    LOGE("****%d   ", *pn);
 //    B b1(*basa);
+
+    caller(callback);
 
 
 
