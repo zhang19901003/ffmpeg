@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
 
        // setContentView(R.layout.activity_main);
 
-        text();
+        text1();
 
 
     }
@@ -34,4 +34,5 @@ public class MainActivity extends Activity {
     }
 
     public native int text();
+    public native int text1();
 }
