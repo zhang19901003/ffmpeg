@@ -321,7 +321,7 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
     LOGE("hello world    *******");
-
+    LOGE("%s %d ", __FILE__,__LINE__);
 
     // TODO
     return  0;
@@ -678,7 +678,6 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 //    B b1(*basa);
 
     caller(callback);
-
 
 
 
