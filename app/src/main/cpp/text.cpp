@@ -345,9 +345,7 @@ int Exec(int x ,int y ,int (*Fun)(int ,int)){
 void printWelcome(int len)
 
 {
-
-    LOGE("欢迎欢迎 -- %d/n", len);
-
+    LOGE("printWelcome -- %d/n", len);
 }
 
 
@@ -356,7 +354,7 @@ void printGoodbye(int len)
 
 {
 
-    LOGE("送客送客 -- %d/n", len);
+    LOGE("printGoodbye -- %d/n", len);
 
 }
 
@@ -376,7 +374,7 @@ void callback(int times, void (* print)(int))
 
     }
 
-    LOGE("/n我不知道你是迎客还是送客!/n/n");
+
 
 }
 
@@ -427,7 +425,7 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
     LOGE("%d",str11[0](5,10));
     LOGE("%d",str11[1](5,10));
     LOGE("%d",str11[2](5,10));
-    callback(10, printWelcome);
+  //  callback(10, printWelcome);
 
 //    callback(10, printGoodbye);
 //
