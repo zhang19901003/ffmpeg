@@ -102,6 +102,7 @@ class Person {
 
 public:
     virtual void Display() = 0;
+    virtual void Display1() = 0;
 
 
 };
@@ -112,6 +113,10 @@ public:
     void Display() {
 
         LOGE("asasa %s", "aaaaaaaaaaaaaaaaaaaaaaaaa");
+    }
+    void Display1() {
+
+        LOGE("asasa %s", "bbbbbbbbbbbbbbbbbbbbbbbbb");
     }
 };
 
@@ -154,6 +159,7 @@ T Stack<T>::top() const {
         throw out_of_range("Stack<>::top(): empty stack");
     }
     // 返回最后一个元素的副本
+
     return elems.back();
 }
 
@@ -307,6 +313,74 @@ void callback(int a)//回调函数
 
 }
 
+int add1 (int x ,int y ){
+
+    return  x+y;
+}
+int dec  (int x ,int y ){
+
+    return  x-y;
+}
+int max (int x ,int y ){
+
+    return  x>y?x:y;
+}
+
+void Hello(){
+    LOGE("hello world");
+}
+
+
+int Exec(void (*Fun)()){
+    Fun();
+    return  0;
+}
+
+int Exec(int x ,int y ,int (*Fun)(int ,int)){
+    return  Fun(x,y);
+
+}
+
+
+void printWelcome(int len)
+
+{
+
+    LOGE("欢迎欢迎 -- %d/n", len);
+
+}
+
+
+
+void printGoodbye(int len)
+
+{
+
+    LOGE("送客送客 -- %d/n", len);
+
+}
+
+
+
+void callback(int times, void (* print)(int))
+
+{
+
+    int i;
+
+    for (i = 0; i < times; ++i)
+
+    {
+
+        print(i);
+
+    }
+
+    LOGE("/n我不知道你是迎客还是送客!/n/n");
+
+}
+
+
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
@@ -316,22 +390,48 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
     Person *s = new Student;
     s->Display();
     typedef void (*Fun3)();
-    Fun3 fun3 = getB;
+    Fun3 fun3 = &getB;
     fun3();
 
 
     typedef void (*Fun)();
-    Fun(*(int *) *(int *)s);
-    // Fun(getB);
-    void (*Fun1[2])(int) = {getA,getA};
+    (Fun(*(int *) *(int *)s))();
+    (Fun(*((int *)*(int *)s+1)))();
+
+    void (*Fun1[])(int) = {getA,getA};
     Fun1[0](10086);
 
     void (*(*Fun2)[2])(int);
     Fun2 = &Fun1;
-    (*Fun2)[0](1008611);
+    (*(*Fun2)[0])(1008611);
 
 
+    int (*Fun4)(int, int);
+    Fun4 = add1;
+    LOGE("%d fun4" ,Fun4(3,4));
 
+    Exec(Hello);
+
+   int x =  Exec(3,10086,add1);
+    LOGE("%d",x);
+
+    int (*str[3])(int ,int) ={add1,dec,max};
+    typedef int (*str1[3])(int ,int);
+
+     LOGE("%d",str[0](5,10));
+     LOGE("%d",str[1](5,10));
+     LOGE("%d",str[2](5,10));
+
+    str1 str11 = {add1,dec,max};
+
+    LOGE("%d",str11[0](5,10));
+    LOGE("%d",str11[1](5,10));
+    LOGE("%d",str11[2](5,10));
+    callback(10, printWelcome);
+
+//    callback(10, printGoodbye);
+//
+//    printWelcome(5);
 
 
 
