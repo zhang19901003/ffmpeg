@@ -126,7 +126,9 @@ public:
     void push(T t);  // 入栈
     void pop();               // 出栈
     T top() const;            // 返回栈顶元素
-    bool empty() const {       // 如果为空则返回真。
+    bool empty() const {
+        // 如果为空则返回真。
+
         return elems.empty();
     }
 };
@@ -289,18 +291,13 @@ void TestRenfen(int *&a) {
     a = &c;
 }
 
-typedef void (*Fun)(int);
 
 void getA(int a) {
     LOGE("getA***  %d", a);
 }
 
-void caller(Fun pCallback) {
-    Fun p = pCallback;
-
-    int result = 1;
-
-    (*p)(result);
+void getB() {
+    LOGE("getA***------------  %d");
 }
 
 
@@ -318,12 +315,25 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
 
     Person *s = new Student;
     s->Display();
-    typedef void (*
-            Fun)();
+    typedef void (*Fun3)();
+    Fun3 fun3 = getB;
+    fun3();
 
-    Fun((*(int *) *(int *) s));
-    void (*Fun1)(int) = getA;
-    Fun1(10086);
+
+    typedef void (*Fun)();
+    Fun(*(int *) *(int *)s);
+    // Fun(getB);
+    void (*Fun1[2])(int) = {getA,getA};
+    Fun1[0](10086);
+
+    void (*(*Fun2)[2])(int);
+    Fun2 = &Fun1;
+    (*Fun2)[0](1008611);
+
+
+
+
+
 
 
     // TODO
@@ -680,7 +690,7 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 //    LOGE("****%d   ", *pn);
 //    B b1(*basa);
 
-    caller(callback);
+    //caller(callback);
 
 
     return 0;
