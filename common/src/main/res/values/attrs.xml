@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomSeekBar">
+        <attr name="numTextSize" format="dimension"/>
+        <attr name="padding" format="dimension"></attr>
+        <attr name="max_" format="string"></attr>
+        <attr name="min_" format="string"></attr>
+    </declare-styleable>
+</resources>

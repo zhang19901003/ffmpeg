@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <include layout="@layout/activity_main_title" />
+    <LinearLayout
+        android:id="@+id/lv_connect"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/base17dp"
+            android:layout_marginTop="@dimen/base20dp"
+            android:layout_weight="1"
+            android:text="@string/connectnet"
+            android:textColor="@color/gray99"
+            android:textSize="14sp" />
+        <View
+            android:layout_marginTop="@dimen/base15dp"
+            android:background="@color/view_color"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base1dp"></View>
+    </LinearLayout>
+    <RelativeLayout
+        android:background="@color/white"
+        android:id="@+id/rv_connect_item"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base44dp">
+
+        <TextView
+            android:textColor="@color/dialog_button_color"
+            android:textSize="16sp"
+            android:id="@+id/tv_wifi_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/base17dp"
+            android:text="sasasasa" />
+
+        <ImageView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/base17dp"
+            android:src="@drawable/wifi_connect" />
+        <View
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/base15dp"
+            android:background="@color/view_color"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base1dp"></View>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lv_wifi_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/base17dp"
+            android:layout_marginTop="@dimen/base20dp"
+            android:layout_weight="1"
+            android:text="@string/check_net"
+            android:textColor="@color/gray99"
+            android:textSize="14sp" />
+        <View
+            android:layout_marginTop="@dimen/base15dp"
+            android:background="@color/view_color"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base1dp"></View>
+    </LinearLayout>
+    <ListView
+        android:background="@color/white"
+        android:id="@+id/lv_wifi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null">
+    </ListView>
+
+    <View
+        android:id="@+id/lv_vw"
+        android:background="@color/view_color"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base1dp"></View>
+
+
+</LinearLayout>

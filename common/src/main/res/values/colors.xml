@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+    <!--<color name="colorPrimary">#15CEA7</color>-->
+    <!--<color name="colorPrimaryDark">#15CEA7</color>-->
+    <!--<color name="colorAccent">#15CEA7</color>-->
+    <color name="white">#ffffff</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="all_background_title">#f14e6d</color>
+    <color name="mian_button_select_before">#272736</color>
+    <color name="color_module_navigation">#404767</color>
+    <color name="black">#272727</color>
+    <color name="graye1">#E1E1E1</color>
+    <color name="grayc9">#c9c9c9</color>
+
+    <!--黑色-->
+    <color name="black33">#333333</color>
+    <!--背景-->
+    <color name="grayf3">#f3f3f3</color>
+    <!--深灰-->
+    <color name="gray66">#666666</color>
+    <!--中灰-->
+    <color name="gray99">#999999</color>
+    <!--浅灰-->
+    <color name="graybb">#bbbbbb</color>
+    <color name="red">#ff0000</color>
+    <color name="action_text_color_normal" >#cfcfcf</color>
+    <color name="action_text_color_pressed" >#353535</color>
+    <color name="action_text_color_enabled" >#818585</color>
+    <color name="press">#25fa55</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="selectitme">#f2f2f2</color>
+
+
+    <!-- QRCode scanner color begin -->
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="result_view">#B0000000</color>
+    <color name="viewfinder_frame">#90FFFFFF</color>
+    <color name="result_point_color">#C0FFFF00</color>
+    <color name="laser_color">#0F0</color>
+    <color name="corner_color">#00FF00</color>
+    <!-- QRCode scanner color end -->
+
+    <color name="color_red">#ef5a40</color>
+
+    <!-- 白色 -->
+    <color name="color_white">#ffffff</color>
+
+    <color name="side_bar_text">#4A4A4A</color>
+    <color name="shadow_bg">#66000000</color>
+    <color name="super_light_grey">#9f9f9f</color>
+
+    <color name="text_select">#303F9F</color>
+    <color name="text_normal">#78828c</color>
+    <color name="view_color">#dddddd</color>
+    <color name="background">#f8f8f8</color>
+    <color name="dialog_color">#666666</color>
+    <color name="dialog_button_color">#5677fc</color>
+    <color name="btn_disenable">#505677fc</color>
+    <color name="disconnect">#ffdfdf</color>
+    <color name="grayd5">#d5d5d5</color>
+</resources>

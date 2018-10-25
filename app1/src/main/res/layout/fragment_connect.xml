@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+    <LinearLayout
+        android:id="@+id/lv_net_help"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="@color/disconnect"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base45dp">
+        <ImageView
+            android:layout_marginLeft="@dimen/base23dp"
+            android:src="@drawable/disconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="当前网络不可用,  请检查你的网络配置"
+            android:layout_marginLeft="@dimen/base20dp"
+            android:textColor="@color/gray66"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <Button
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/base125dp"
+        android:textSize="@dimen/activity_main_title_left_size"
+        android:id="@+id/bt_connect"
+        android:layout_width="@dimen/base165dp"
+        android:layout_height="@dimen/base55dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/btn_bg"
+        android:text="@string/connect_net" />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:layout_marginTop="@dimen/base235dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="网络设备原始名:  danke" />
+    <TextView
+        android:layout_below="@+id/tv_desc"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:layout_marginTop="@dimen/base8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/connect_desc2" />
+</RelativeLayout>

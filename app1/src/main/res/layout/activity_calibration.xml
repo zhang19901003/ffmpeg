@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:orientation="vertical">
+
+        <include layout="@layout/activity_main_title" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background"
+                android:orientation="vertical">
+
+                <include layout="@layout/item_use_help" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base1dp"
+                    android:background="@color/view_color"></View>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base1dp"
+                    android:layout_marginTop="@dimen/base12dp"
+                    android:background="@color/view_color"></View>
+
+                <RelativeLayout
+                    android:id="@+id/rv_calibration"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base43dp"
+                    android:background="@color/white">
+
+                    <TextView
+                        style="@style/style_common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/auto_setting" />
+
+                    <ImageView style="@style/style_common_arror" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base1dp"
+                    android:layout_marginLeft="@dimen/base15dp"
+                    android:background="@color/view_color"></View>
+
+                <RelativeLayout
+                    android:id="@+id/rv_hand_calibration"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base43dp"
+                    android:background="@color/white">
+
+                    <TextView
+                        style="@style/style_common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/hand_setting" />
+
+                    <ImageView style="@style/style_common_arror" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base1dp"
+                    android:background="@color/view_color"></View>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base1dp"
+                    android:layout_marginTop="@dimen/base12dp"
+                    android:background="@color/view_color"></View>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base43dp"
+                    android:background="@color/white">
+
+                    <TextView
+                        style="@style/style_common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/camera_height" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/base15dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_camera_height"
+                            android:layout_width="@dimen/base60dp"
+                            android:layout_height="@dimen/base25dp"
+                            android:background="@drawable/ed_focus_bg"
+                            android:gravity="center"
+                            android:hint="@string/input"
+                            android:imeOptions="actionSend"
+                            android:maxLength="6"
+                            android:maxLines="1"
+                            android:phoneNumber="true"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/base8dp"
+                            android:text="@string/mm" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base1dp"
+                    android:layout_marginLeft="@dimen/base15dp"
+                    android:background="@color/view_color"></View>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base43dp"
+                    android:background="@color/white">
+
+                    <TextView
+                        style="@style/style_common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/bumper_distance" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/base15dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_bumper_distance"
+                            android:layout_width="@dimen/base60dp"
+                            android:layout_height="@dimen/base25dp"
+                            android:background="@drawable/ed_focus_bg"
+                            android:gravity="center"
+                            android:hint="@string/input"
+                            android:imeOptions="actionSend"
+                            android:maxLength="6"
+                            android:maxLines="1"
+                            android:phoneNumber="true"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/base8dp"
+                            android:text="@string/mm" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base1dp"
+                    android:layout_marginLeft="@dimen/base15dp"
+                    android:background="@color/view_color"></View>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base43dp"
+                    android:background="@color/white">
+
+                    <TextView
+                        style="@style/style_common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/left_wheel_distance" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/base15dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_left_distance"
+                            android:layout_width="@dimen/base60dp"
+                            android:layout_height="@dimen/base25dp"
+                            android:background="@drawable/ed_focus_bg"
+                            android:gravity="center"
+                            android:hint="@string/input"
+                            android:imeOptions="actionSend"
+                            android:maxLength="6"
+                            android:maxLines="1"
+                            android:phoneNumber="true"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/base8dp"
+                            android:text="@string/mm" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <View
+
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base1dp"
+                    android:layout_marginLeft="@dimen/base15dp"
+                    android:background="@color/view_color"></View>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base43dp"
+                    android:background="@color/white">
+
+                    <TextView
+                        style="@style/style_common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/right_wheel_distance" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/base15dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_right_distance"
+                            android:layout_width="@dimen/base60dp"
+                            android:layout_height="@dimen/base25dp"
+                            android:background="@drawable/ed_focus_bg"
+                            android:gravity="center"
+                            android:hint="@string/input"
+                            android:imeOptions="actionSend"
+                            android:maxLength="6"
+                            android:maxLines="1"
+                            android:phoneNumber="true"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/base8dp"
+                            android:text="@string/mm" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base1dp"
+                    android:layout_marginLeft="@dimen/base15dp"
+                    android:background="@color/view_color"></View>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base43dp"
+                    android:background="@color/white">
+
+                    <TextView
+                        style="@style/style_common_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/calibration_height" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/base15dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_calibration_height"
+                            android:layout_width="@dimen/base60dp"
+                            android:layout_height="@dimen/base25dp"
+                            android:background="@drawable/ed_focus_bg"
+                            android:gravity="center"
+                            android:hint="@string/input"
+                            android:imeOptions="actionSend"
+                            android:maxLength="6"
+                            android:maxLines="1"
+                            android:phoneNumber="true"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/base8dp"
+                            android:text="@string/mm" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base1dp"
+                    android:background="@color/view_color"></View>
+
+
+            </LinearLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+</FrameLayout>

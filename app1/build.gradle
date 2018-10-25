@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "27.0.3"
+    defaultConfig {
+        applicationId "com.adasplus.proadas.business"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "v1.0.0.20180604"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def file = output.outputFile
+            def gitTag = 'git describe --tags --abbrev=0'.execute([], project.rootDir).text.trim()
+            println(output.outputFile)
+//            output.outputFile = new File(file.parent, file.name.replace(".apk", "-" + gitTag + "-alpha.apk"))
+           if(file.name.startsWith("app-release")){
+                output.outputFile = new File(file.parent, "KyProject-"+gitTag + "-alpha.apk")
+            }
+
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+//    signingConfigs {
+//
+//        releaseConfig {
+//            storeFile file('business.jks')
+//            storePassword 'keytech2016'
+//            keyAlias 'keytech2017'
+//            keyPassword 'zhang1990'
+//        }
+//    }
+}
+
+dependencies {
+    compile project(':easypermissions')
+    compile project(':socket')
+
+}

@@ -103,27 +103,18 @@ class Person {
 public:
     virtual void Display() = 0;
 
-protected :
-    string _name;
+
 };
 
 class Student : public Person {
 
-private:
-    virtual void Display() {
-        _name = "Student";
-        LOGE("asasa %s", _name.c_str());
-    }
-
-};
-
-class Student1 : public Student {
-
+public:
     void Display() {
-        _name = "Student1";
-        LOGE("asasaaaaaa %s", _name.c_str());
+
+        LOGE("asasa %s", "aaaaaaaaaaaaaaaaaaaaaaaaa");
     }
 };
+
 
 template<class T>
 
@@ -256,7 +247,7 @@ public:
         return b1;
     }
 
-    void setValue(){
+    void setValue() {
         number = 15;
     }
 
@@ -300,10 +291,12 @@ void TestRenfen(int *&a) {
 
 typedef void (*Fun)(int);
 
+void getA(int a) {
+    LOGE("getA***  %d", a);
+}
 
-void caller(Fun pCallback)
-{
-    Fun   p = pCallback;
+void caller(Fun pCallback) {
+    Fun p = pCallback;
 
     int result = 1;
 
@@ -313,7 +306,7 @@ void caller(Fun pCallback)
 
 void callback(int a)//回调函数
 {
-    LOGE("callback result =  %d",a);
+    LOGE("callback result =  %d", a);
 
 }
 
@@ -321,10 +314,20 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
     LOGE("hello world    *******");
-    LOGE("%s %d ", __FILE__,__LINE__);
+    LOGE("%s %d ", __FILE__, __LINE__);
+
+    Person *s = new Student;
+    s->Display();
+    typedef void (*
+            Fun)();
+
+    Fun((*(int *) *(int *) s));
+    void (*Fun1)(int) = getA;
+    Fun1(10086);
+
 
     // TODO
-    return  0;
+    return 0;
 }
 
 
@@ -638,8 +641,8 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 
 
     Person *person = new Student();
-    Person *person1 = new Student1();
-    person1->Display();
+
+
     person->Display();
     TextSig *asdas = TextSig::Get();
     TextSig *asdad = TextSig::Get();
@@ -648,8 +651,8 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 //    LOGE("number  is  %d",  B::get()->number);
 
     B *const b3 = B::get();
-   // b3 = NULL;
-   //  delete (b3);
+    // b3 = NULL;
+    //  delete (b3);
 
     LOGE("--------%p   %p", asdas, asdad);
     //   B b5 = *b3;
@@ -678,7 +681,6 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 //    B b1(*basa);
 
     caller(callback);
-
 
 
     return 0;

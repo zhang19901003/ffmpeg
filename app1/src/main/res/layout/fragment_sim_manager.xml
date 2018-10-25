@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/swipe_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base1dp"
+            android:layout_marginTop="@dimen/base15dp"
+            android:background="@color/view_color"></View>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base43dp"
+            android:background="@color/white">
+
+            <TextView
+                style="@style/style_common_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/operato" />
+
+            <TextView
+                android:id="@+id/tv_sim"
+                style="@style/style_common_text_right" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base1dp"
+            android:layout_marginLeft="@dimen/base15dp"
+            android:background="@color/view_color"></View>
+
+        <RelativeLayout
+            android:id="@+id/rv_traffic_query"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base43dp"
+            android:background="@color/white">
+
+            <TextView
+                style="@style/style_common_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/traffic" />
+
+            <ImageView style="@style/style_common_arror"
+
+                />
+        </RelativeLayout>
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base1dp"
+            android:background="@color/view_color"></View>
+
+
+    </LinearLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>
+</FrameLayout>
+

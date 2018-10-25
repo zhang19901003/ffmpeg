@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl_onclick"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:background="@drawable/btn_50bg_white"
+                android:id="@+id/rv_des"
+                android:paddingTop="@dimen/base14dp"
+                android:paddingBottom="@dimen/base14dp"
+                android:paddingLeft="@dimen/base22dp"
+                android:paddingRight="@dimen/base22dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/base275dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="网络设备原始名:  danke"
+                    android:textColor="@color/dialog_button_color"
+                    android:textSize="13sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_desc"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/base8dp"
+                    android:text="@string/connect_desc2"
+                    android:textColor="@color/dialog_button_color"
+                    android:textSize="13sp" />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_dashed_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rv_des"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/base30dp"
+                android:layout_marginRight="@dimen/base30dp"
+                android:layout_marginTop="@dimen/base20dp"
+                android:background="@drawable/white_dashed"
+                android:padding="@dimen/base10dp"
+                android:text="@string/dialog_desc1"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/tv_dashed_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/rv_group"
+                android:layout_marginBottom="@dimen/base22dp"
+                android:layout_marginLeft="@dimen/base7dp"
+                android:layout_marginRight="@dimen/base50dp"
+                android:background="@drawable/white_dashed"
+                android:padding="@dimen/base12dp"
+                android:text="@string/dialog_desc2"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_dashed_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/rv_group"
+                android:layout_marginBottom="@dimen/base22dp"
+                android:layout_marginLeft="@dimen/base38dp"
+                android:layout_marginRight="@dimen/base38dp"
+                android:background="@drawable/white_dashed"
+                android:lineSpacingExtra="@dimen/base5dp"
+                android:padding="@dimen/base12dp"
+                android:text="@string/dialog_desc3"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <RadioGroup
+                android:id="@+id/rv_group"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base50dp"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <RadioButton
+                    android:textColor="@color/text_select"
+                    android:background="@drawable/btn_50bg_white"
+                    android:id="@+id/rg_common"
+                    style="@style/dialog_botton_tag_style"
+                    android:drawableTop="@drawable/common_select"
+                    android:text="@string/common"
+                    android:visibility="invisible" />
+                <RadioButton
+                    android:id="@+id/rg_devices"
+                    style="@style/dialog_botton_tag_style"
+                    android:background="@drawable/btn_50bg_white"
+                    android:drawableTop="@drawable/setting_select"
+                    android:enabled="true"
+                    android:text="@string/device_setting"
+                    android:textColor="@color/text_select" />
+                <RadioButton
+                    style="@style/dialog_botton_tag_style"
+                    android:drawableTop="@drawable/about_normal"
+                    android:text="@string/about"
+                    android:visibility="invisible" />
+            </RadioGroup>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

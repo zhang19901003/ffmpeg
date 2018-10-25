@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base54dp"
+                android:background="@color/dialog_button_color">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="none"
+                    android:singleLine="true"
+                    android:text="@string/title"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/activity_main_title_size" />
+            </RelativeLayout>
+
+            <Button
+                android:enabled="false"
+                android:id="@+id/bt_connect"
+                android:layout_width="@dimen/base165dp"
+                android:layout_height="@dimen/base55dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/base179dp"
+                android:background="@drawable/btn_bg"
+                android:text="@string/connect_net"
+                android:textColor="@color/white"
+                android:textSize="@dimen/activity_main_title_left_size" />
+            android:text="@string/connect_desc2" />
+            <View
+                android:layout_above="@+id/rg_main"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base1dp"
+                android:background="@color/view_color"></View>
+            <RadioGroup
+                android:id="@+id/rg_main"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base50dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <RadioButton
+
+                    android:id="@+id/rb_common_frame"
+                    style="@style/dialog_botton_tag_style"
+                    android:drawableTop="@drawable/common_normal"
+                    android:text="@string/common" />
+
+                <RadioButton
+                    android:id="@+id/rb_thirdparty"
+                    style="@style/dialog_botton_tag_style"
+                    android:drawableTop="@drawable/setting_normal"
+                    android:text="@string/device_setting" />
+
+                <!--<RadioButton-->
+
+                <!--android:id="@+id/rb_custom"-->
+                <!--style="@style/botton_tag_style"-->
+                <!--android:drawableTop="@drawable/rb_sim_drawable_selector"-->
+                <!--android:text="@string/sim" />-->
+
+                <RadioButton
+                    android:id="@+id/rb_other"
+                    style="@style/dialog_botton_tag_style"
+                    android:drawableTop="@drawable/about_normal"
+                    android:text="@string/about" />
+            </RadioGroup>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#77000000">
+
+            <RelativeLayout
+                android:background="@drawable/btn_50bg_white"
+                android:id="@+id/rv_des"
+                android:paddingTop="@dimen/base14dp"
+                android:paddingBottom="@dimen/base14dp"
+                android:paddingLeft="@dimen/base22dp"
+                android:paddingRight="@dimen/base22dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/base275dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="网络设备原始名:  danke"
+                    android:textColor="@color/dialog_button_color"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/tv_second"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_desc"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/base8dp"
+                    android:text="@string/connect_desc2"
+                    android:textColor="@color/dialog_button_color"
+                    android:textSize="13sp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rv_des"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/base30dp"
+                android:layout_marginRight="@dimen/base30dp"
+                android:layout_marginTop="@dimen/base20dp"
+                android:background="@drawable/white_dashed"
+                android:padding="@dimen/base10dp"
+                android:text="@string/common_help_5"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

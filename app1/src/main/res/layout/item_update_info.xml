@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <TextView
+            android:text="通过更新资源，可以在保留资源的现有属性和安全设置的同时更新内容设置的同时更新内容设置的同时更新内容设置的同时更新内容设置的同时更新内容设置的同时更新内容设置的同时更新内容"
+            style="@style/style_text_help"
+            android:layout_marginBottom="@dimen/base15dp"
+            android:layout_marginTop="@dimen/base20dp"
+   />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base1dp"
+        android:layout_marginLeft="@dimen/base16dp"
+        android:background="@color/view_color"></View>
+    introduction
+
+</LinearLayout>
