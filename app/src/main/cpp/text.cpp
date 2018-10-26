@@ -379,6 +379,16 @@ void callback(int times, void (* print)(int))
 }
 
 
+
+void showvector(vector<int> v)
+{
+    for (vector<int>::iterator it = v.begin(); it != v.end(); it++)
+    {
+        LOGE("%d//////",*it);
+    }
+
+}
+
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
@@ -459,14 +469,26 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
 
     LOGE("index %d",sq.find("aa",0));
     LOGE("index %d",sq.find("aa1",0));
+    vector<int> v1(5);
+    v1.resize(0);
+    for (int i = 0; i < 20; i++)
+    {
+        v1.push_back(i);
+    }
+
+    for (int i = 0; i < v1.size(); i++)
+    {
+        LOGE("%d ******  %d",v1[i],i);
+    }
 
 
+    LOGE("index %d %d", sizeof(v1),v1.size());
 
+    showvector(v1);
 
     // TODO
     return 0;
 }
-
 
 
 
