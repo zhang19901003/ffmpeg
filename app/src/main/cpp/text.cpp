@@ -383,7 +383,7 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
     LOGE("hello world    *******");
-    LOGE("%s %d ", __FILE__, __LINE__);
+    LOGE("%s %d %s %s", __FILE__, __LINE__,__TIME__,__DATE__);
 
     Person *s = new Student;
     s->Display();
@@ -414,7 +414,7 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
     LOGE("%d",x);
 
     int (*str[3])(int ,int) ={add1,dec,max};
-    typedef int (*str1[3])(int ,int);
+     typedef int (*str1[3])(int ,int);
 
      LOGE("%d",str[0](5,10));
      LOGE("%d",str[1](5,10));
@@ -430,6 +430,35 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
 //    callback(10, printGoodbye);
 //
 //    printWelcome(5);
+
+    string s1 =  "asasa ,"; //正确
+
+    string s3 = s1 + "hello " + ",";
+
+    LOGE("%d  ,%d,    %s",s3.size(), s3.length(),s3.c_str());
+
+
+    for (int i = 0; i < s3.size(); i++)
+    {
+        cout << s3[i] << endl;
+        s3[i] = 's';
+    }
+
+    LOGE("%s",s3.c_str());
+
+
+    string str111("hi sysu");
+    for (string::iterator it = str111.begin(); it != str111.end(); it++)
+    {
+       LOGE("%c",*it);
+
+    }
+
+
+    string sq("heoolo sdaa ss");
+
+    LOGE("index %d",sq.find("aa",0));
+    LOGE("index %d",sq.find("aa1",0));
 
 
 
