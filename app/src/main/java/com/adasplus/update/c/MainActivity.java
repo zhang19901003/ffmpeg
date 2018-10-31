@@ -4,6 +4,7 @@ package com.adasplus.update.c;
 import android.app.Activity;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 
 
@@ -22,6 +23,7 @@ public class MainActivity extends Activity {
         String imei = Utils.getIMEI(this);
         // setContentView(R.layout.activity_main);
         Log.e("ffmpeg",imei+"***");
+
         text1();
 
 

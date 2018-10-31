@@ -16,5 +16,8 @@
 //     TextSig text1;
 //     LOGE("%p %p", &text ,&text1 );
 
+
+
+
      return new TextSig();
  }

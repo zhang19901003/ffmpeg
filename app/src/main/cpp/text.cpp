@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
+#include <exception>
 
 #define TAG "ffmpeg"
 #define LOGD(...)__android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
@@ -102,6 +103,7 @@ class Person {
 
 public:
     virtual void Display() = 0;
+
     virtual void Display1() = 0;
 
 
@@ -114,6 +116,7 @@ public:
 
         LOGE("asasa %s", "aaaaaaaaaaaaaaaaaaaaaaaaa");
     }
+
     void Display1() {
 
         LOGE("asasa %s", "bbbbbbbbbbbbbbbbbbbbbbbbb");
@@ -313,78 +316,81 @@ void callback(int a)//回调函数
 
 }
 
-int add1 (int x ,int y ){
+int add1(int x, int y) {
 
-    return  x+y;
-}
-int dec  (int x ,int y ){
-
-    return  x-y;
-}
-int max (int x ,int y ){
-
-    return  x>y?x:y;
+    return x + y;
 }
 
-void Hello(){
+int dec(int x, int y) {
+
+    return x - y;
+}
+
+int max(int x, int y) {
+
+    return x > y ? x : y;
+}
+
+void Hello() {
     LOGE("hello world");
 }
 
 
-int Exec(void (*Fun)()){
+int Exec(void (*Fun)()) {
     Fun();
-    return  0;
+    return 0;
 }
 
-int Exec(int x ,int y ,int (*Fun)(int ,int)){
-    return  Fun(x,y);
+int Exec(int x, int y, int (*Fun)(int, int)) {
+    return Fun(x, y);
 
 }
 
 
-void printWelcome(int len)
-
-{
+void printWelcome(int len) {
     LOGE("printWelcome -- %d/n", len);
 }
 
 
-
-void printGoodbye(int len)
-
-{
+void printGoodbye(int len) {
 
     LOGE("printGoodbye -- %d/n", len);
 
 }
 
 
-
-void callback(int times, void (* print)(int))
-
-{
+void callback(int times, void (*print)(int)) {
 
     int i;
 
-    for (i = 0; i < times; ++i)
-
-    {
+    for (i = 0; i < times; ++i) {
 
         print(i);
 
     }
 
 
-
 }
 
 
-
-void showvector(vector<int> v)
+class CBasic
 {
-    for (vector<int>::iterator it = v.begin(); it != v.end(); it++)
-    {
-        LOGE("%d//////",*it);
+public:
+    virtual int test()=0; // 一定要是 virtual
+};
+
+class CDerived : public CBasic
+{
+public:
+    virtual int test(){    return 1;}
+};
+
+
+
+
+void showvector(vector<int> v) {
+    for (vector<int>::iterator it = v.begin(); it != v.end(); it++) {
+        LOGE("%d//////", *it);
     }
 
 }
@@ -393,7 +399,7 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
     LOGE("hello world    *******");
-    LOGE("%s %d %s %s", __FILE__, __LINE__,__TIME__,__DATE__);
+    LOGE("%s %d %s %s", __FILE__, __LINE__, __TIME__, __DATE__);
 
     Person *s = new Student;
     s->Display();
@@ -403,10 +409,10 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
 
 
     typedef void (*Fun)();
-    (Fun(*(int *) *(int *)s))();
-    (Fun(*((int *)*(int *)s+1)))();
+    (Fun(*(int *) *(int *) s))();
+    (Fun(*((int *) *(int *) s + 1)))();
 
-    void (*Fun1[])(int) = {getA,getA};
+    void (*Fun1[])(int) = {getA, getA};
     Fun1[0](10086);
 
     void (*(*Fun2)[2])(int);
@@ -416,75 +422,99 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
 
     int (*Fun4)(int, int);
     Fun4 = add1;
-    LOGE("%d fun4" ,Fun4(3,4));
+    LOGE("%d fun4", Fun4(3, 4));
 
     Exec(Hello);
 
-   int x =  Exec(3,10086,add1);
-    LOGE("%d",x);
+    int x = Exec(3, 10086, add1);
+    LOGE("%d", x);
 
-    int (*str[3])(int ,int) ={add1,dec,max};
-     typedef int (*str1[3])(int ,int);
+    int (*str[3])(int, int) ={add1, dec, max};
+    typedef int (*str1[3])(int, int);
 
-     LOGE("%d",str[0](5,10));
-     LOGE("%d",str[1](5,10));
-     LOGE("%d",str[2](5,10));
+    LOGE("%d", str[0](5, 10));
+    LOGE("%d", str[1](5, 10));
+    LOGE("%d", str[2](5, 10));
 
-    str1 str11 = {add1,dec,max};
+    str1 str11 = {add1, dec, max};
 
-    LOGE("%d",str11[0](5,10));
-    LOGE("%d",str11[1](5,10));
-    LOGE("%d",str11[2](5,10));
-  //  callback(10, printWelcome);
+    LOGE("%d", str11[0](5, 10));
+    LOGE("%d", str11[1](5, 10));
+    LOGE("%d", str11[2](5, 10));
+    //  callback(10, printWelcome);
 
 //    callback(10, printGoodbye);
 //
 //    printWelcome(5);
 
-    string s1 =  "asasa ,"; //正确
+    string s1 = "asasa ,"; //正确
 
     string s3 = s1 + "hello " + ",";
 
-    LOGE("%d  ,%d,    %s",s3.size(), s3.length(),s3.c_str());
+    LOGE("%d  ,%d,    %s", s3.size(), s3.length(), s3.c_str());
 
 
-    for (int i = 0; i < s3.size(); i++)
-    {
+    for (int i = 0; i < s3.size(); i++) {
         cout << s3[i] << endl;
         s3[i] = 's';
     }
 
-    LOGE("%s",s3.c_str());
+    LOGE("%s", s3.c_str());
 
 
     string str111("hi sysu");
-    for (string::iterator it = str111.begin(); it != str111.end(); it++)
-    {
-       LOGE("%c",*it);
+    for (string::iterator it = str111.begin(); it != str111.end(); it++) {
+        LOGE("%c", *it);
 
     }
 
 
     string sq("heoolo sdaa ss");
 
-    LOGE("index %d",sq.find("aa",0));
-    LOGE("index %d",sq.find("aa1",0));
+    LOGE("index %d", sq.find("aa", 0));
+    LOGE("index %d", sq.find("aa1", 0));
     vector<int> v1(5);
     v1.resize(0);
-    for (int i = 0; i < 20; i++)
-    {
+    for (int i = 0; i < 20; i++) {
         v1.push_back(i);
     }
 
-    for (int i = 0; i < v1.size(); i++)
-    {
-        LOGE("%d ******  %d",v1[i],i);
+    for (int i = 0; i < v1.size(); i++) {
+        LOGE("%d ******  %d", v1[i], i);
     }
 
 
-    LOGE("index %d %d", sizeof(v1),v1.size());
+    LOGE("index %d %d", sizeof(v1), v1.size());
 
     showvector(v1);
+
+    char s111 = 's';
+    int a11111 = static_cast<int>  (s111);
+
+    LOGE("aaa1111 = %d", a11111);
+
+    s111 = static_cast<char> (119);
+
+    LOGE("aaa1111 = %c", s111);
+
+
+
+//    CBasic  *pB1  =   CDerived();
+//  //  CBasic * pB2  ;
+//
+//    //dynamic cast failed, so pD1 is null.
+//    CDerived * pD1 = dynamic_cast<CDerived * > (&pB1);
+
+//    //dynamic cast succeeded, so pD2 points to  CDerived object
+//    CDerived * pD2 = dynamic_cast<CDerived * > (pB2);
+//
+//    //dynamci cast failed, so throw an exception.
+//    CDerived & rD1 = dynamic_cast<CDerived &> (*pB1);
+//
+////dynamic cast succeeded, so rD2 references to CDerived object.
+//    CDerived & rD2 = dynamic_cast<CDerived &> (*pB2);
+
+
 
     // TODO
     return 0;
