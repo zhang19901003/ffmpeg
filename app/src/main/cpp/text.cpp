@@ -29,6 +29,8 @@
 #include <stdexcept>
 #include <pthread.h>
 #include "TextSig.h"
+#include "ConcreteSubject.h"
+#include "ConcreteObserver.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -517,7 +519,6 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
 }
 
 
-
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
@@ -742,22 +743,26 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 #include <arpa/inet.h>
 #include <arpa/inet.h>
 #include <sys/stat.h>
+
 #define SERVER_PORT 8000
 #define MAXLINE 4096
-typedef  char*(*PType)(char* a, const char *b);
+
+typedef char *(*PType)(char *a, const char *b);
+
+#include <mutex>
 
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text2(JNIEnv *env, jobject instance) {
 
-    char a [10];
-    PType  p = strcpy;
+    char a[10];
+    PType p = strcpy;
 
-    LOGE("Type   %s", p(a,"sasas"));
+    LOGE("Type   %s", p(a, "sasas"));
     short num = 0x1122;
     char *c;
     c = (char *) &num;
-    LOGE("%d",*c);
+    LOGE("%d", *c);
     if (*c == 0x22)
         LOGE("this is little end");
     else
@@ -789,8 +794,8 @@ Java_com_adasplus_update_c_MainActivity_text2(JNIEnv *env, jobject instance) {
         addrlen = sizeof(clientaddr);
 
         LOGE("%s", "bbbbbbbbbbbbbbb");
-        char  buf[20037];
-        LOGE("size of %d",sizeof(buf)/ sizeof(char));
+        char buf[20037];
+        LOGE("size of %d", sizeof(buf) / sizeof(char));
         confd = accept(sockfd, (struct sockaddr *) &clientaddr, &addrlen);
         LOGE("%s   %d", "ccccccccccccccc", confd);
         inet_ntop(AF_INET, &clientaddr.sin_addr.s_addr, ipstr, sizeof(ipstr));
@@ -801,7 +806,7 @@ Java_com_adasplus_update_c_MainActivity_text2(JNIEnv *env, jobject instance) {
              inet_ntop(AF_INET, &clientaddr.sin_addr.s_addr, ipstr, sizeof(ipstr)),
              ntohs(clientaddr.sin_port));
 
-        while (true){
+        while (true) {
             len = read(confd, buf, sizeof(buf));
             LOGE("%s", buf);
             i = 0;
@@ -821,31 +826,114 @@ Java_com_adasplus_update_c_MainActivity_text2(JNIEnv *env, jobject instance) {
     return 0;
 }
 
-class Singleton
-{
+class Singleton {
 public:
-    static Singleton GetInstance()
-    {
-        static Singleton instance;
-        return instance;
+    static Singleton *GetInstance();
+
+    int a;
+
+    // GC 机制
+    class GC {
+    public:
+        GC() {
+            LOGE("Here oncreat the gc...");
+        }
+
+        ~GC() {
+            // 可以在这里销毁所有的资源，例如：db 连接、文件句柄等
+            if (m_pSingleton != NULL) {
+                LOGE("Here destroy the m_pSingleton...");
+                //  delete m_pSingleton;
+                m_pSingleton = NULL;
+            }
+        }
+
+        static GC gc;  // 用于释放单例
+    };
+
+    GC *aaa = NULL;
+
+    ~Singleton() {
+        if (aaa == NULL) {
+            LOGE("~GC  null");
+        }
+        delete (aaa);
+        LOGE("~Singleton  destory");
     }
+
+private:
+    Singleton() {
+        aaa = new GC();
+        LOGE("Singleton  oncreat");
+    }  // 构造函数（被保护）
 
 
 
 private:
-    Singleton() {}
+    static Singleton *m_pSingleton;  // 指向单例对象的指针
+    static mutex m_mutex;
+    static int asd;
+
 };
 
+Singleton *Singleton::m_pSingleton = NULL;
+mutex Singleton::m_mutex;
+
+Singleton *Singleton::GetInstance() {
+    if (m_pSingleton == NULL) {
+
+        if (m_pSingleton == NULL) {
+            m_pSingleton = new Singleton();
+            LOGE("hello world");
+
+        }
+
+    }
+    return m_pSingleton;
+}
+
+
+Singleton::GC  Singleton::GC::gc;
+
+
+void texx() {
+    Singleton *pSingleton1 = Singleton::GetInstance();
+    delete (pSingleton1);
+//    Singleton *pSingleton2 = Singleton::GetInstance();
+//
+//    LOGE ("%p,,,,,,,,%p",pSingleton1 ,pSingleton2);
+    //  delete(pSingleton1);
+}
 
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text4(JNIEnv *env, jobject instance) {
 
-LOGE("welecome  Test4");
-    Singleton single = Singleton::GetInstance();
-    LOGE("Singleton  copy  %p",&single);
-    Singleton singleton= single;
-    LOGE("Singleton  copy  %p",&singleton);
-    return  10086;
+    LOGE("welecome  Test4");
+//    Singleton single = Singleton::GetInstance();
+//    LOGE("Singleton  copy  %p",&single);
+//    Singleton singleton= single;
+//    LOGE("Singleton  copy  %p",&singleton);
+    //   texx();
+
+    subject *pSubject = new ConcreteSubject();
+    IObserver *pObserver1 = new ConcreteObserver("Jack Ma");
+    IObserver *pObserver2 = new ConcreteObserver("Pony");
+
+    pSubject->Attach(pObserver1);
+    pSubject->Attach(pObserver2);
+
+    ConcreteSubject * concreteSubject =  dynamic_cast<ConcreteSubject *> (pSubject);
+    concreteSubject->SetPrice(12.5);
+
+
+    pSubject->Notify();
+
+    pSubject->Detach(pObserver2);
+
+    concreteSubject->SetPrice(15);
+    pSubject->Notify();
+
+    return 10086;
 
 }

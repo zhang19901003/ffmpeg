@@ -11,6 +11,12 @@ add_library( text
              SHARED
              src/main/cpp/text.cpp
              src/main/cpp/TextSig.cpp
+             src/main/cpp/subject.cpp
+             src/main/cpp/ConcreteSubject.cpp
+             src/main/cpp/IObserver.cpp
+             src/main/cpp/ConcreteObserver.cpp
+             src/main/cpp/Computer.cpp
+             src/main/cpp/IBuilder.cpp++
 
               )
 add_library( avcodec
