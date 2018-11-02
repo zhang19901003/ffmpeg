@@ -517,6 +517,7 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
 }
 
 
+
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
@@ -739,7 +740,8 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 }
 
 #include <arpa/inet.h>
-
+#include <arpa/inet.h>
+#include <sys/stat.h>
 #define SERVER_PORT 8000
 #define MAXLINE 4096
 typedef  char*(*PType)(char* a, const char *b);
@@ -787,7 +789,7 @@ Java_com_adasplus_update_c_MainActivity_text2(JNIEnv *env, jobject instance) {
         addrlen = sizeof(clientaddr);
 
         LOGE("%s", "bbbbbbbbbbbbbbb");
-        char  buf[1000];
+        char  buf[20037];
         LOGE("size of %d",sizeof(buf)/ sizeof(char));
         confd = accept(sockfd, (struct sockaddr *) &clientaddr, &addrlen);
         LOGE("%s   %d", "ccccccccccccccc", confd);
@@ -817,4 +819,33 @@ Java_com_adasplus_update_c_MainActivity_text2(JNIEnv *env, jobject instance) {
     close(sockfd);
 
     return 0;
+}
+
+class Singleton
+{
+public:
+    static Singleton GetInstance()
+    {
+        static Singleton instance;
+        return instance;
+    }
+
+
+
+private:
+    Singleton() {}
+};
+
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_adasplus_update_c_MainActivity_text4(JNIEnv *env, jobject instance) {
+
+LOGE("welecome  Test4");
+    Singleton single = Singleton::GetInstance();
+    LOGE("Singleton  copy  %p",&single);
+    Singleton singleton= single;
+    LOGE("Singleton  copy  %p",&singleton);
+    return  10086;
+
 }
