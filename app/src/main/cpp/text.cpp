@@ -908,7 +908,7 @@ Java_com_adasplus_update_c_MainActivity_text2(JNIEnv *env, jobject instance) {
         addrlen = sizeof(clientaddr);
         LOGE("%s","bbbbbbbbbbbbbbb");
 
-        confd = accept(sockfd, (struct sockaddr *)&clientaddr, &addrlen);//返回的是客户端和服务端专用通道的socket描述符
+        confd = accept(sockfd, (struct sockaddr *)&clientaddr, &addrlen);
         LOGE("%s   %d","ccccccccccccccc",confd);
         //输出客户端IP地址和端口号
         inet_ntop(AF_INET, &clientaddr.sin_addr.s_addr, ipstr, sizeof(ipstr));
