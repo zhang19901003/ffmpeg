@@ -373,19 +373,15 @@ void callback(int times, void (*print)(int)) {
 }
 
 
-class CBasic
-{
+class CBasic {
 public:
     virtual int test()=0; // 一定要是 virtual
 };
 
-class CDerived : public CBasic
-{
+class CDerived : public CBasic {
 public:
-    virtual int test(){    return 1;}
+    virtual int test() { return 1; }
 };
-
-
 
 
 void showvector(vector<int> v) {
@@ -394,7 +390,6 @@ void showvector(vector<int> v) {
     }
 
 }
-
 
 
 JNIEXPORT jint JNICALL
@@ -520,138 +515,6 @@ Java_com_adasplus_update_c_MainActivity_text1(JNIEnv *env, jobject instance) {
     // TODO
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 extern "C"
@@ -876,79 +739,82 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
 }
 
 #include <arpa/inet.h>
+
 #define SERVER_PORT 8000
 #define MAXLINE 4096
+typedef  char*(*PType)(char* a, const char *b);
+
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text2(JNIEnv *env, jobject instance) {
+
+    char a [10];
+    PType  p = strcpy;
+
+    LOGE("Type   %s", p(a,"sasas"));
+    short num = 0x1122;
+    char *c;
+    c = (char *) &num;
+    LOGE("%d",*c);
+    if (*c == 0x22)
+        LOGE("this is little end");
+    else
+        LOGE("this is big end");
+
 
     LOGE("This is test2");
     struct sockaddr_in serveraddr, clientaddr;
     int sockfd, addrlen, confd, len, i;
     char ipstr[128];
     char buf[MAXLINE];
-    //成功返回一个新的文件描述符，失败返回-1，设置errno
+
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    LOGE("1111111111111   %d",sockfd);
+    LOGE("1111111111111   %d", sockfd);
 
     bzero(&serveraddr, sizeof(serveraddr));
     serveraddr.sin_family = AF_INET;
     serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serveraddr.sin_port = htons(SERVER_PORT);
-    // 成功返回0，失败返回-1, 设置errno
-    int code = bind(sockfd, (struct sockaddr *)&serveraddr, sizeof(serveraddr));
-    LOGE("222222222   %d",code);
-    //listen()成功返回0，失败返回-1。
-    int i88 =  listen(sockfd, 128);
-    LOGE("333333333333   %d",i88);
-    LOGE("%s","aaaaaaaaaaaaaaaaaa");
+//13363880500
+    int code = bind(sockfd, (struct sockaddr *) &serveraddr, sizeof(serveraddr));
+    LOGE("222222222   %d", code);
+
+    int i88 = listen(sockfd, 128);
+    LOGE("333333333333   %d", i88);
+    LOGE("%s", "aaaaaaaaaaaaaaaaaa");
     while (1) {
 
-        //4.accept阻塞监听客户端链接请求
         addrlen = sizeof(clientaddr);
-        LOGE("%s","bbbbbbbbbbbbbbb");
 
-        confd = accept(sockfd, (struct sockaddr *)&clientaddr, &addrlen);
-        LOGE("%s   %d","ccccccccccccccc",confd);
-        //输出客户端IP地址和端口号
+        LOGE("%s", "bbbbbbbbbbbbbbb");
+        char  buf[1000];
+        LOGE("size of %d",sizeof(buf)/ sizeof(char));
+        confd = accept(sockfd, (struct sockaddr *) &clientaddr, &addrlen);
+        LOGE("%s   %d", "ccccccccccccccc", confd);
         inet_ntop(AF_INET, &clientaddr.sin_addr.s_addr, ipstr, sizeof(ipstr));
-        printf("client ip %s\tport %d\n",
-               inet_ntop(AF_INET, &clientaddr.sin_addr.s_addr, ipstr, sizeof(ipstr)),
-               ntohs(clientaddr.sin_port));
-        int count = 100^5;
-        //和客户端交互数据操作confd
-        //5.处理客户端请求
-        LOGE("%s  ,%d  %d %d",inet_ntop(AF_INET, &clientaddr.sin_addr.s_addr, ipstr, sizeof(ipstr)),
+
+        int count = 100 ^5;
+
+        LOGE("%s  ,%d  %d %d",
+             inet_ntop(AF_INET, &clientaddr.sin_addr.s_addr, ipstr, sizeof(ipstr)),
              ntohs(clientaddr.sin_port));
-        len = read(confd, buf, sizeof(buf));
-        LOGE("%s",buf);
-        i = 0;
-        while (i < len) {
-            buf[i] = toupper(buf[i]);
-            i++;
+
+        while (true){
+            len = read(confd, buf, sizeof(buf));
+            LOGE("%s", buf);
+            i = 0;
+            while (i < len) {
+                buf[i] = toupper(buf[i]);
+                i++;
+            }
+
+            write(confd, buf, strlen(buf));
         }
-        char *buf = "heheheheheh";
-        write(confd, buf, 10);
+
 
         close(confd);
     }
     close(sockfd);
 
-
-//    char addr_p[16]; /*IP地址的点分十进制字符串表示形式*/
-//    struct in_addr addr_n;/*IP地址的二进制表示形式*/
-//    if(inet_pton(AF_INET,"192.168.11.6",&addr_n)<0)/*地址由字符串转换为二级制数*/
-//    {
-//        perror("fail to convert");
-//        exit(1);
-//    }
-//    printf("address:%x\n",addr_n.s_addr);
-//    if(inet_ntop(AF_INET,&addr_n,addr_p,(socklen_t )sizeof(addr_p))==NULL)
-//    {
-//        perror("fail to convert");
-//        exit(1);
-//    }
-//    printf("address:%s\n",addr_p);/*打印地址的点分十进制形式*/
-
-    return  0 ;
+    return 0;
 }
