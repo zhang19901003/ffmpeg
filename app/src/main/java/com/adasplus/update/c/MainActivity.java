@@ -16,6 +16,7 @@ public class MainActivity extends Activity {
 
     static {
         System.loadLibrary("native-lib");
+
     }
 
     private XPlay glSurfaceView;
