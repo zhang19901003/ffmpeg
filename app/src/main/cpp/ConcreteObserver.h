@@ -17,6 +17,10 @@ public:
 
     void Update(float price) ;
 
+    ~ConcreteObserver(){
+        LOGE("ConcreteObserver delete");
+    }
+
 private:
     string m_strName;
 

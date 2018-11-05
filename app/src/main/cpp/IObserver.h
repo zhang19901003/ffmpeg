@@ -11,7 +11,9 @@
 class IObserver {
 public:
     virtual void Update(float price) = 0;
-
+    ~ Update(){
+        LOGE("IObserver delete");
+    };
 };
 
 
