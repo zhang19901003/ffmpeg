@@ -13,7 +13,7 @@ TextSig* TextSig::Get(){
 //     LOGE("%p %p", &text ,&text1 );
 
 
-    XLog.
+
 
      return new TextSig();
  }
