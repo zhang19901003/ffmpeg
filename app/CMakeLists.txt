@@ -17,6 +17,7 @@ add_library( text
              src/main/cpp/ConcreteObserver.cpp
              src/main/cpp/Computer.cpp
              src/main/cpp/IBuilder.cpp
+             src/main/cpp/XLog.cpp
 
               )
 add_library( avcodec

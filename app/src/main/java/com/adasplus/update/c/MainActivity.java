@@ -22,11 +22,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String imei = Utils.getIMEI(this);
-        TelephonyManager teleMgr = (TelephonyManager)  getSystemService(Context.TELEPHONY_SERVICE);
-
-
-        Log.d("ffmpeg", teleMgr.getDeviceId()+"   "+ teleMgr.getLine1Number()+"  "+teleMgr.getSimSerialNumber()+"   "+teleMgr.getNetworkOperator());
+//        String imei = Utils.getIMEI(this);
+//        TelephonyManager teleMgr = (TelephonyManager)  getSystemService(Context.TELEPHONY_SERVICE);
+//
+//
+//        Log.d("ffmpeg", teleMgr.getDeviceId()+"   "+ teleMgr.getLine1Number()+"  "+teleMgr.getSimSerialNumber()+"   "+teleMgr.getNetworkOperator());
        //  setContentView(R.layout.activity_main);
 //        Log.e("ffmpeg",imei+"***");
 //        new Thread(new Runnable() {
@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 //                text2();
 //            }
 //        }).start();
-  //      text4();
+       text4();
 //
     }
 

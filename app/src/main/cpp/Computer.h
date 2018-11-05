@@ -10,10 +10,10 @@
 using namespace std;
 class Computer {
 private:
-    string m_strCpu;  // CPU
-    string m_strMainboard;  // 主板
-    string m_strRam;  // 内存
-    string m_strVideoCard;  // 显卡
+    string m_strCpu;
+    string m_strMainboard;
+    string m_strRam;
+    string m_strVideoCard;
 
 public:
     void SetmCpu(string cpu);

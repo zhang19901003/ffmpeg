@@ -1,5 +1,6 @@
 //
-// Created by zhangyapeng on 18-11-2.
+// Created by zhangyapen
+// g on 18-11-2.
 //
 
 #ifndef C_PROJECT_CONCRETEOBSERVER_H

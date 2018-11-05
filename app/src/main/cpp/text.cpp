@@ -904,7 +904,7 @@ void texx() {
 //    LOGE ("%p,,,,,,,,%p",pSingleton1 ,pSingleton2);
     //  delete(pSingleton1);
 }
-
+#define SAFE_DELETE(p) { if(p){delete(p); (p)=NULL;} }
 extern "C"
 JNIEXPORT jint JNICALL
 Java_com_adasplus_update_c_MainActivity_text4(JNIEnv *env, jobject instance) {
@@ -933,6 +933,8 @@ Java_com_adasplus_update_c_MainActivity_text4(JNIEnv *env, jobject instance) {
 
     concreteSubject->SetPrice(15);
     pSubject->Notify();
+    SAFE_DELETE(pObserver1);
+
 
     return 10086;
 

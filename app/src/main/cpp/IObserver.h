@@ -6,9 +6,12 @@
 #define C_PROJECT_IOBSERVER_H
 
 
+#include "XLog.h"
+
 class IObserver {
 public:
     virtual void Update(float price) = 0;
+
 };
 
 
