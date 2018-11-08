@@ -23,3 +23,12 @@ void ConcreteSubject::Notify() {
         ++it;
     }
 }
+
+ConcreteSubject ::~ConcreteSubject(){
+    LOGE("ConcreteSubject delete");
+    list<IObserver *>::iterator it = m_observers.begin();
+    while (it != m_observers.end()) {
+        delete(*it);
+        ++it;
+    }
+};

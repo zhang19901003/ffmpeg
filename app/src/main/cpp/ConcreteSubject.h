@@ -18,16 +18,7 @@ public:
     virtual void Notify() ;
     ConcreteSubject() { m_fPrice = 10.0; }
     void SetPrice(float price);
-    virtual ~ConcreteSubject(){
-        LOGE("ConcreteSubject delete");
-        list<IObserver *>::iterator it = m_observers.begin();
-        while (it != m_observers.end()) {
-//            (*it)->Update(m_fPrice);
-            delete(*it);
-            ++it;
-
-        }
-    };
+    virtual ~ConcreteSubject() ;
 };
 
 

@@ -933,8 +933,8 @@ Java_com_adasplus_update_c_MainActivity_text4(JNIEnv *env, jobject instance) {
 
     concreteSubject->SetPrice(15);
     pSubject->Notify();
-    delete(pSubject);
-  //  delete(pObserver1);
+     delete(pSubject);
+  //  SAFE_DELETE(pObserver1);
 
 
     return 10086;
