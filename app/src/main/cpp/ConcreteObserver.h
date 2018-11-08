@@ -13,12 +13,15 @@ using namespace std;
 
 class ConcreteObserver : public IObserver {
 public:
-    ConcreteObserver(string name) { m_strName = name; }
+    ConcreteObserver(string name) {
+        LOGE("ConcreteObserver custore");
+        m_strName = name;
+    }
 
     void Update(float price) ;
 
-    ~ConcreteObserver(){
-        LOGE("ConcreteObserver delete");
+    ~ ConcreteObserver(){
+        LOGE("ConcreteObserver delete %s",m_strName.c_str());
     }
 
 private:
