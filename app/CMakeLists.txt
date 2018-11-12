@@ -18,6 +18,8 @@ add_library( text
              src/main/cpp/Computer.cpp
              src/main/cpp/IBuilder.cpp
              src/main/cpp/XLog.cpp
+             src/main/cpp/Monkey.cpp
+             src/main/cpp/SunWuKong.cpp
 
               )
 add_library( avcodec

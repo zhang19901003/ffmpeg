@@ -31,6 +31,8 @@
 #include "TextSig.h"
 #include "ConcreteSubject.h"
 #include "ConcreteObserver.h"
+#include "Monkey.h"
+#include "SunWuKong.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -947,6 +949,32 @@ Java_com_adasplus_update_c_MainActivity_text4(JNIEnv *env, jobject instance) {
     char a[]= {'a','b','v','\0'};
     std::string e = std::string(a);
     LOGE("%s",e.c_str());
+
+    char a1[8]= {"asasasa"};
+    std::string e1 = std::string(a1);
+    LOGE("%s",e1.c_str());
+
+
+    char *a2= new char[100];
+    memset(a2,'a', 100);
+   // a2= "asasa";
+   a2+='b';
+//    const  char * const  p = "11111";
+//    string a3 = string(a2)+p;
+    LOGE("%s %d %d",a2 ,strlen(a2), sizeof(a2)/ sizeof(char));
+
+    Monkey *pSWK = new SunWuKong("Qi Tian Da Sheng");
+    Monkey *pSWK1 = pSWK->Clone();
+    Monkey *pSWK2 = pSWK1->Clone();
+
+    pSWK1->Play();
+    pSWK2->Play();
+
+    delete(pSWK);
+    delete(pSWK1);
+    delete(pSWK2);
+
+
     return 10086;
 
 }
