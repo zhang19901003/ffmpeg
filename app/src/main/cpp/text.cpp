@@ -905,7 +905,7 @@ Singleton::GC  Singleton::GC::gc;
 void texx() {
     Singleton *pSingleton1 = Singleton::GetInstance();
     delete (pSingleton1);
-//    Singleton *pSingleton2 = Singleton::GetInstance();
+//    Singleton * pSingleton2 = Singleton::GetInstance();
 //
 //    LOGE ("%p,,,,,,,,%p",pSingleton1 ,pSingleton2);
     //  delete(pSingleton1);
@@ -943,6 +943,10 @@ Java_com_adasplus_update_c_MainActivity_text4(JNIEnv *env, jobject instance) {
   //  SAFE_DELETE(pObserver1);
 
     LOGE("size of persion1 %d", sizeof(Person1));
+
+    char a[]= {'a','b','v','\0'};
+    std::string e = std::string(a);
+    LOGE("%s",e.c_str());
     return 10086;
 
 }
