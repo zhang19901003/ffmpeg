@@ -100,7 +100,12 @@ int div1(int a, int b) {
     return a / b;
 }
 
+class Person1 {
 
+
+
+
+};
 class Person {
 
 public:
@@ -660,13 +665,14 @@ Java_com_adasplus_update_c_MainActivity_text(JNIEnv *env, jobject instance) {
     p = a;
     LOGW("%d,%p", &p[4][2] - &a[4][2], &p[4][2] - &a[4][2]);
 
-    //把函数的地址存到一个数组中，那这个数组就叫函数指针数组，  parr1 先和 [] 结合，说明parr1是数组，数组的内容是什么呢？ 是 int (*)() 类型的函数指针。
+    //把函数的地址存到一个数组中，那这
+    //
+    // ..0个数组就叫函数指针数组，  parr1 先和 [] 结合，说明parr1是数组，数组的内容是什么呢？ 是 int (*)() 类型的函数指针。
     int (*parr1[10])();
 
     int (*pp[5])(int x, int y) = {0, add, sub, mul, div1};
     //指向函数指针数组的指针  指向函数指针数组的指针是一个 指针 ，指针指向一个 数组 ，数组的元素都是 函数指针
-    void (*(*ppp)[5])(void);
-
+      void (*(*ppp)[5])(void);
 
     LOGE("%d", pp[1](10, 20));
 
@@ -936,7 +942,7 @@ Java_com_adasplus_update_c_MainActivity_text4(JNIEnv *env, jobject instance) {
      delete(pSubject);
   //  SAFE_DELETE(pObserver1);
 
-
+    LOGE("size of persion1 %d", sizeof(Person1));
     return 10086;
 
 }
